@@ -1,0 +1,169 @@
+{% extends 'layouts/baseSesionIniciada.html' %}
+{% load static %}
+
+{% block title %}Mis sensores{% endblock %}
+
+{% block seccion %}Mis sensores{% endblock %}
+
+
+{% block linksCss %}
+<link rel="stylesheet" href="{% static 'pwa/css/agregarNuevoSensor.css' %}">
+{% endblock %}
+
+
+{% block content %}
+
+
+
+<div class="agregarNuevo">
+    <a href="#" onclick="abrirModalAgregar('{{ 1 }}')"><i class="fa-solid fa-plus"></i> Nuevo sensor</a>
+</div>
+
+
+{% for sensor in sensores %}
+<div class="contenedorSensores">
+    <div class="misSensores">
+        <div class="sensoresEcnontrados">
+            <h3>📟 {{ sensor.sensor.nombreSensor }}</h3>
+            <h4>📍 {{ sensor.ubicacionSensor }}</h4>
+        </div>
+        <div class="botonesAcciones">
+            <a href="#" onclick="abrirModalEditar({
+                id: '{{ sensor.id }}',
+                sensorID: '{{ sensor.sensor.sensorID }}',
+                ubicacionSensor: '{{ sensor.ubicacionSensor }}',
+                medicionBase: '{{ sensor.medicionBase }}',
+                limiteDiario: '{{ sensor.limiteDiario }}',
+                umbralAlerta: '{{ sensor.umbralAlerta }}',
+                tiempoMinutos: '{{ sensor.tiempoMinutos }}'
+            })"><i class="fa-solid fa-gear"></i></a>
+            <a href="#" onclick="confirmdelete('{{sensor.id}}')">
+            <i class="fa-solid fa-trash"></i>
+            </a>
+
+        </div>
+    </div>
+</div>
+{% empty %}
+<div class="contenedorVacio">
+    <div class="mensajeVacio">
+        <i class="fa-solid fa-circle-info"></i>
+        <p>No hay sensores registrados aún.</p>
+    </div>
+</div>
+
+{% endfor %}
+
+
+<!--
+<h3>Historial de límites configurados:</h3>
+<ul>
+    {% for limite in limites %}
+        <li>{{ limite.usuarioSensor.sensor.nombreSensor }} - {{  limite.usuarioSensor.sensor.ubicacionSensor }}: {{ limite.limiteDiario }} L - Umbral {{ limite.umbralAlerta }}% ({{ limite.fechaCambio }})</li>
+    {% empty %}
+        <li>No hay configuraciones aún.</li>
+    {% endfor %}
+</ul>
+-->
+
+
+<div id="modal" style="display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:#00000099;">
+    <div class="divPrincipal" style="background:white; margin:auto auto; padding:20px; width:30%; border-radius:10px; position:relative; height: 90%;">
+        <h3 id="modal-title">Asignar nuevo sensor</h3>
+        <form class="agregarNuevoSensor" id="sensorForm" method="POST" data-usuario-id="{{ usuario_id }}" action="{% url 'crearNuevoUsuarioSesor' 0 %}">
+            {% csrf_token %}
+            <label for="sensor">Identificador único del sensor:</label>
+            <input type="text" name="sensor_id" id="sensor_id_input" required>
+
+            <label for="ubicacion">Ubicación donde estará el sensor:</label>
+            <input type="text" name="ubicacion" id="ubicacion_editar" required>
+
+            <label for="medicionBase">Medición base:</label>
+            <input type="text" step="0.01" name="medicionBase" id="medicion_editar" required>
+
+            <label for="limite">Límite Diario (Litros):</label>
+            <input type="text" step="0.01" name="limiteDiario" id="limite_editar" required>
+
+            <label for="umbral">Límite máximo de consumo (Litros):</label>
+            <input type="text" step="0.01" name="umbralAlerta" id="umbral_editar" required>
+
+            <label for="tiempo">Tiempo de generación de alertas (minutos):</label>
+            <input type="text" step="0.01" name="tiempo" id="tiempo_editar" required>
+
+            <button type="submit">Enviar datos</button>
+            <button type="button" onclick="document.getElementById('modal').style.display='none'">Cancelar</button>
+        </form>
+    </div>
+</div>
+
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        setTimeout(() => {
+            const faded = document.querySelectorAll(".fade");
+            faded.forEach(el => el.classList.remove("fade"));
+        }, 600);
+    });
+</script>
+
+<script>
+function abrirModalAgregar(usuarioId) {
+    const form = document.getElementById('sensorForm');
+    const userId = usuarioId || form.getAttribute("data-usuario-id");
+
+    const baseUrl = form.getAttribute("action"); // e.g., /limiteUsuario/nuevoUsuarioSensor/0
+    form.action = baseUrl.replace(/0$/, userId);
+    // Limpia los campos
+    document.getElementById('modal-title').innerText = "Asignar nuevo sensor";
+    document.getElementById('sensorForm').action = `/limiteUsuario/nuevoUsuarioSensor/${usuarioId}`;
+    document.getElementById('sensor_id_input').value = "";
+    document.getElementById('sensor_id_input').readOnly = false;
+    document.getElementById('ubicacion_editar').value = "";
+    document.getElementById('medicion_editar').value = "";
+    document.getElementById('limite_editar').value = "";
+    document.getElementById('umbral_editar').value = "";
+    document.getElementById('tiempo_editar').value = "";
+
+    document.getElementById('modal').style.display = 'block';
+}
+
+function abrirModalEditar(sensor) {
+
+    // Llena los campos
+    document.getElementById('modal-title').innerText = "Editar configuración del sensor";
+    document.getElementById('sensorForm').action = `/limiteUsuario/editarUsuarioSensor/${sensor.id}`; // Asegúrate de tener esta vista
+    document.getElementById('sensor_id_input').value = sensor.sensorID;
+    document.getElementById('sensor_id_input').readOnly = true;
+
+    document.getElementById('ubicacion_editar').value = sensor.ubicacionSensor;
+    document.getElementById('medicion_editar').value = sensor.medicionBase;
+    document.getElementById('limite_editar').value = sensor.limiteDiario;
+    document.getElementById('umbral_editar').value = sensor.umbralAlerta;
+    document.getElementById('tiempo_editar').value = sensor.tiempoMinutos;
+
+    document.getElementById('modal').style.display = 'block';
+}
+</script>
+
+<script>
+    const eliminarUrlBase = "{% url 'eliminar_usuario_sensor' 0 %}".slice(0, -2);
+    function confirmdelete(id) {
+        Swal.fire({
+            title: "CONFIRMACIÓN",
+            text: "¿Está seguro de eliminar este sensor? Todos los datos asociados serán eliminados definitivamente",
+            icon: "warning",
+            showCancelButton: true,
+            confirmButtonColor: "#d33",
+            cancelButtonColor: "#3085d6",
+            confirmButtonText: "Sí, eliminar",
+            cancelButtonText: "Cancelar"
+        }).then((result) => {
+            if (result.isConfirmed) {
+                window.location.href = eliminarUrlBase + id + "/";
+            }
+        });
+    }
+</script>
+
+
+
+{% endblock %}

@@ -1,0 +1,40 @@
+{% extends 'layouts/baseSesionIniciada.html' %}
+{% load static %}
+{% block content %}
+<div class="container py-4 d-flex justify-content-center align-items-center" style="min-height: 80vh;">
+    <div class="w-100" style="max-width: 400px;">
+        <div class="card shadow-sm">
+            <div class="card-header bg-success text-white text-center">
+                <h2 class="mb-0 py-2"><i class="fa-solid fa-plus"></i> Agregar Sensor</h2>
+            </div>
+            <div class="card-body px-4 py-4">
+                <form method="post">
+                    {% csrf_token %}
+                    <div class="mb-3">
+                        <label for="sensorID" class="form-label"><i class="fa-solid fa-hashtag"></i> ID (manual):</label>
+                        <input type="number" name="sensorID" id="sensorID" class="form-control" required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="nombreSensor" class="form-label"><i class="fa-solid fa-microchip"></i> Nombre:</label>
+                        <input type="text" name="nombreSensor" id="nombreSensor" class="form-control" required>
+                    </div>
+                    <!-- Los campos tipo y ubicacion se dejan pero no afectan el modelo -->
+                    <div class="mb-3">
+                        <label for="tipo" class="form-label"><i class="fa-solid fa-list"></i> Tipo:</label>
+                        <input type="text" name="tipo" id="tipo" class="form-control">
+                    </div>
+                    <div class="mb-3">
+                        <label for="ubicacion" class="form-label"><i class="fa-solid fa-location-dot"></i> Ubicación:</label>
+                        <input type="text" name="ubicacion" id="ubicacion" class="form-control">
+                    </div>
+                    <div class="d-grid">
+                        <button type="submit" class="btn btn-success">
+                            <i class="fa-solid fa-plus"></i> Agregar Sensor
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

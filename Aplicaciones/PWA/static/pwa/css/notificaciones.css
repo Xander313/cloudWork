@@ -1,0 +1,88 @@
+*{
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+
+#notificaciones-contenedor{
+    max-height: 100vh;
+    overflow-y: auto;
+    width: 50%;
+    margin: auto;
+}
+
+
+.tituloNotificaciones{
+    text-align: center;
+    align-content: center;
+    margin: auto;
+    height: 50%;
+
+}
+
+
+.sensoresLugares{
+    display: flex; 
+    flex-direction: row;
+    gap: 10px;
+    max-width: 90%;
+    overflow-x: auto;
+    margin: auto;
+}
+
+
+
+
+
+.sensor-selector
+{
+    margin: auto;
+    width: 100%;
+    max-width: 500px;
+}
+.sensor-selector h3
+{
+    text-align: center;
+}
+/*para los mensajes vacios*/
+.contenedorVacio {
+    margin-top: 40px;
+    text-align: center;
+    color: #777;
+}
+
+.mensajeVacio {
+    background-color: #f4f4f4;
+    border: 1px dashed #bbb;
+    padding: 20px;
+    border-radius: 8px;
+    display: inline-block;
+}
+
+.mensajeVacio i {
+    font-size: 24px;
+    margin-bottom: 10px;
+    color: #5a9bd4;
+}
+
+
+@media screen and (max-width: 600px) {
+    #notificaciones-contenedor {
+        width: 95%;
+        margin: auto;
+        height: 100%;
+    }
+    .tituloNotificaciones{
+        padding: 20px;
+    }
+
+
+    .sensoresLugares button{
+        width: 500px;
+        height: auto;
+
+    }
+
+}
+

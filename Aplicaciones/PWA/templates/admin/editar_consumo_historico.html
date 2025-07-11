@@ -1,0 +1,39 @@
+{% extends 'layouts/baseSesionIniciada.html' %}
+{% load static %}
+{% block content %}
+<div class="container py-4 d-flex justify-content-center align-items-center" style="min-height: 80vh;">
+    <div class="w-100" style="max-width: 400px;">
+        <div class="card shadow-sm">
+            <div class="card-header bg-primary text-white text-center">
+                <h2 class="mb-0 py-2"><i class="fa-solid fa-pen-to-square"></i> Editar Consumo Histórico</h2>
+            </div>
+            <div class="card-body px-4 py-4">
+                <form method="post">
+                    {% csrf_token %}
+                    <div class="mb-3">
+                        <label for="consumoTotal" class="form-label">Consumo Total (L):</label>
+                        <input type="number" step="0.01" name="consumoTotal" id="consumoTotal" class="form-control" value="{{ historico.consumoTotal }}" required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="maxConsumo" class="form-label">Máximo Consumo (L):</label>
+                        <input type="number" step="0.01" name="maxConsumo" id="maxConsumo" class="form-control" value="{{ historico.maxConsumo }}" required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="minConsumo" class="form-label">Mínimo Consumo (L):</label>
+                        <input type="number" step="0.01" name="minConsumo" id="minConsumo" class="form-control" value="{{ historico.minConsumo }}" required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="fechaPeriodo" class="form-label">Fecha del Periodo:</label>
+                        <input type="date" name="fechaPeriodo" id="fechaPeriodo" class="form-control" value="{{ historico.fechaPeriodo|date:'Y-m-d' }}" required>
+                    </div>
+                    <div class="d-grid">
+                        <button type="submit" class="btn btn-primary">
+                            <i class="fa-solid fa-save"></i> Guardar Cambios
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

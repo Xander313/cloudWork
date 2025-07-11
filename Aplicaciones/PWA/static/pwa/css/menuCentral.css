@@ -1,0 +1,23 @@
+
+
+.contenidoCentral{
+    display: flex;
+    flex-direction: column;
+}
+
+
+.elementosMenuCentral{
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+    width: 200px;
+}
+
+.elementosMenuCentral a { 
+    text-decoration-line: none;
+    color: #000;
+    padding: 10px;
+    border: 3px solid aqua;
+    border-radius: 10px;
+
+}
