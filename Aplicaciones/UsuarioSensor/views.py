@@ -9,11 +9,11 @@ from django.contrib.auth.hashers import make_password
 
 def panel_admin(request):
     if not request.session.get('es_admin'):
-        return redirect('login')  # Redirige si no es admin
+        return redirect('login') 
 
-    usuarios = Usuario.objects.all()  # Obtener todos los usuarios
-    sensores = Sensor.objects.all()  # Obtener todos los sensores
-    asignaciones = UsuarioSensor.objects.all()  # Obtener todas las asignaciones
+    usuarios = Usuario.objects.all()  
+    sensores = Sensor.objects.all() 
+    asignaciones = UsuarioSensor.objects.all()  
 
     if request.method == 'POST':
         usuario_id = request.POST.get('usuario')
@@ -36,26 +36,9 @@ def panel_admin(request):
         'asignaciones': asignaciones,
     })
 
-def eliminar_usuario(request, usuario_id):
-    usuario = get_object_or_404(Usuario, id=usuario_id)
-    usuario.delete()
-    messages.success(request, 'Usuario eliminado exitosamente.')
-    return redirect('panel_admin')
 
 
 
 
-def editar_usuario(request, usuario_id):
-    usuario = get_object_or_404(Usuario, id=usuario_id)
-    if request.method == 'POST':
-        correo = request.POST.get('correo')
-        nombre = request.POST.get('nombre')
-        password = request.POST.get('password')
-        usuario.correoUsuario = correo         # <--- CAMBIA ESTO
-        usuario.nombreUsuario = nombre         # <--- Y ESTO
-        if password:
-            usuario.passwordUsuario = make_password(password)  # <--- Y ESTO
-        usuario.save()
-        messages.success(request, 'Usuario actualizado correctamente.')
-        return redirect('panel_admin')
-    return render(request, 'admin/editar_usuario.html', {'usuario': usuario})
+
+

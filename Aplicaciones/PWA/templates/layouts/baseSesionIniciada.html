@@ -42,12 +42,12 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.2.7/pdfmake.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.2.7/vfs_fonts.js"></script>
 
-    <title>{% block title %}HydroSys{% endblock %}</title>
+    <title>{% block title %}AquAlert{% endblock %}</title>
     <link rel="stylesheet" href="{% static 'pwa/css/main.css' %}">
 </head>
 <body>
     <header>
-        <h1 class="tituloCentral titleFade">HydroSys 💧 {% block seccion %}{% endblock %}</h1>
+        <h1 class="tituloCentral titleFade">AquAlert 💧 {% block seccion %}{% endblock %}</h1>
     </header>
     <main class="fade">
             <div class="contenedorMain">        
@@ -55,19 +55,6 @@
 
                 {% endblock %}
             </div>
-            <div class="mainButtons">
-                <form action="{% url 'menuCentral' %}" method="post">
-                    {% csrf_token %}
-                    <input type="hidden" name="usuario_id" value="{{ usuario_id }}">
-                    <button class="butonRegresar" type="submit" class="btn-regresar">
-                        <i class="fa-solid fa-arrow-left"></i>
-                    </button>
-                </form>
-
-                <a href="#" onclick="confirm()"><i class="fa-solid fa-right-from-bracket"></i></a>
-            </div>
-
-        
 
     </main>
 

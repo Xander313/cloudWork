@@ -60,39 +60,52 @@ main {
     
 }
 
+
+
+
+
+
+
 .mainButtons {
-    position: fixed;
-    bottom: 0;
-    left: 0;
-    width: 100%;
-    display: flex;
-    justify-content: space-around; 
-    direction: rtl;
-    padding: 10px 20px;
-    z-index: 999; 
-}
+        position: fixed;
+        bottom: 0;
+        left: 0;
+        width: 100%;
+        display: flex;
+        justify-content: space-around; 
+        direction: rtl;
+        padding: 10px 20px;
+        z-index: 999; 
+    }
 
 
-.mainButtons a {
-    color: #fff;
-    font-size: 1.5rem;
-    padding: 15px;
-    border-radius: 100%;
-    background-color: rgb(190, 4, 4);
-    box-shadow: 0 0 10px 0 rgb(190, 4, 4);
-}
+    .mainButtons a {
+        color: #fff;
+        font-size: 0.7rem;
+        padding: 15px;
+        border-radius: 100%;
+        background-color: rgb(190, 4, 4);
+        box-shadow: 0 0 10px 0 rgb(190, 4, 4);
+    }
 
-
-.butonRegresar{
-    padding: 15px;
-    font-size: 1.5rem;
-    color: #fff;
-    background-color: aqua;
-    border: 1px solid aqua;
-    border-radius: 100%;
-    box-shadow: 0 0 10px 0 aqua;
+    .butonRegresar{
+        padding: 15px;
+        font-size: 0.7rem;
+        color: #fff;
+        background-color: aqua;
+        border: 1px solid aqua;
+        border-radius: 100%;
+        box-shadow: 0 0 10px 0 aqua;
     
-}
+    }   
+
+
+
+
+    .mainButtons {
+
+        justify-content: center; 
+    }
 
 @media screen and (max-width: 600px) {
     .tituloCentral{
@@ -100,12 +113,45 @@ main {
     }
 
     .mainButtons {
-
-        justify-content: space-between; 
+        position: fixed;
+        bottom: 0;
+        left: 0;
+        width: 100%;
+        display: flex;
+        justify-content: space-around; 
+        direction: rtl;
+        padding: 10px 20px;
+        z-index: 999; 
     }
 
 
+    .mainButtons a {
+        color: #fff;
+        font-size: 0.7rem;
+        padding: 15px;
+        border-radius: 100%;
+        background-color: rgb(190, 4, 4);
+        box-shadow: 0 0 10px 0 rgb(190, 4, 4);
+    }
 
+    .butonRegresar{
+        padding: 15px;
+        font-size: 0.7rem;
+        color: #fff;
+        background-color: aqua;
+        border: 1px solid aqua;
+        border-radius: 100%;
+        box-shadow: 0 0 10px 0 aqua;
+    
+    }   
+
+
+
+
+    .mainButtons {
+
+        justify-content: left; 
+    }
 
 
 }

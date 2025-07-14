@@ -1,9 +1,9 @@
 {% extends 'layouts/baseSesionIniciada.html' %}
 {% load static %}
 
-{% block title %}Mis sensores{% endblock %}
+{% block title %}Mis Medidores{% endblock %}
 
-{% block seccion %}Mis sensores{% endblock %}
+{% block seccion %}Mis Medidores{% endblock %}
 
 
 {% block linksCss %}
@@ -14,19 +14,80 @@
 {% block content %}
 
 
-
+<!--
 <div class="agregarNuevo">
     <a href="#" onclick="abrirModalAgregar('{{ 1 }}')"><i class="fa-solid fa-plus"></i> Nuevo sensor</a>
 </div>
+-->
 
+<style>
+.elementosdelRegreso {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 10px;
+    
+    flex-wrap: wrap;
+}
+
+.formParaRegresarAtras {
+    margin: 0;
+    width: 40%;
+    margin: 10px;
+}
+
+.butonRegresar {
+    background-color: #2ecc71;
+    border: none;
+    border-radius: 8px;
+    padding: 10px 16px;
+    margin-left: 5px;
+    font-size: 16px;
+    color: white;
+    cursor: pointer;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    transition: background-color 0.3s ease;
+}
+
+.butonRegresar:hover {
+    background-color: #27ae60;
+}
+.elementosdelRegreso h3 {
+    margin: 0;
+    font-size: 1.2rem;
+    flex: 1;
+    padding-left: 10px;
+}
+
+
+
+@media screen and (max-width: 600px) {
+.formParaRegresarAtras {
+    width: 95%;
+}
+
+
+}
+</style>
+
+
+<form class="formParaRegresarAtras" action="{% url 'menuCentral' %}" method="post">
+    {% csrf_token %}
+    <input type="hidden" name="usuario_id" value="{{ usuario_id }}">
+    <button class="butonRegresar" type="submit" class="btn-regresar">
+        <i class="fa-solid fa-arrow-left"></i>
+    </button>
+</form>
 
 {% for sensor in sensores %}
 <div class="contenedorSensores">
     <div class="misSensores">
         <div class="sensoresEcnontrados">
-            <h3>📟 {{ sensor.sensor.nombreSensor }}</h3>
-            <h4>📍 {{ sensor.ubicacionSensor }}</h4>
+            <h3>📟 {{ sensor.sensor.sensorID }}</h3>
+            
+            <h4>📍 {{ sensor.sensor.nombreSensor }}</h4>
         </div>
+        <!--
         <div class="botonesAcciones">
             <a href="#" onclick="abrirModalEditar({
                 id: '{{ sensor.id }}',
@@ -40,15 +101,15 @@
             <a href="#" onclick="confirmdelete('{{sensor.id}}')">
             <i class="fa-solid fa-trash"></i>
             </a>
-
         </div>
+        -->
     </div>
 </div>
 {% empty %}
 <div class="contenedorVacio">
     <div class="mensajeVacio">
         <i class="fa-solid fa-circle-info"></i>
-        <p>No hay sensores registrados aún.</p>
+        <p>No hay medidores asignados aún. Comuníquese con la Junta de Agua potable.</p>
     </div>
 </div>
 

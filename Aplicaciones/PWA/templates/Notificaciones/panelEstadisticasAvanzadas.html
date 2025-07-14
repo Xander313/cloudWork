@@ -1,0 +1,101 @@
+
+{% extends 'layouts/admin.html' %}
+{% load static %}
+{% block content %}
+    <!-- Mapa -->
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/chart.js/dist/chart.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+    <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBfGs7bFheV6d7HSt1KWV2kVF0pwa8WepM&callback=initMapaAvanzado" async defer></script>
+
+    <!-- Scripts -->
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+<h1 style="font-family: Montserrat;">Estadísticas Diarias</h1>
+<div id="mapaAvanzado" style="height: 600px;"></div>
+
+
+<style>
+    body { 
+      font-family: sans-serif; margin: 0; padding: 0; 
+    }
+    #mapaAvanzado { 
+      height: 560px !important; 
+      width: 100%;
+
+      border: 5px solid aqua;
+      border-radius: 25px;
+    }
+
+
+</style>
+
+
+<script>
+function initMapaAvanzado() {
+  const mapa = new google.maps.Map(document.getElementById("mapaAvanzado"), {
+    center: { lat: -0.7415954958310084, lng: -78.64123031371885 },
+    zoom: 14.5,
+    mapTypeId: 'roadmap'
+  });
+
+  fetch("/notificaciones/consumo-dinamico-hoy")
+  
+    .then(res => res.json())
+    .then(sensores => {
+      console.log(sensores)
+      sensores.forEach(sensor => {
+        const marker = new google.maps.Marker({
+          position: { lat: sensor.latitud, lng: sensor.longitud },
+          map: mapa,
+          title: sensor.nombreSensor
+        });
+
+        const chartId = `chart-${sensor.sensorID}`;
+        const content = `
+          <div style="width:500px;height:400px;">
+            <strong>${sensor.nombreSensor}</strong><br>
+            <canvas id="${chartId}"></canvas>
+          </div>
+        `;
+
+        const infoWindow = new google.maps.InfoWindow({ content });
+
+        marker.addListener("click", () => {
+          infoWindow.open(mapa, marker);
+          setTimeout(() => {
+            const canvas = document.getElementById(chartId);
+            if (canvas) {
+              new Chart(canvas, {
+                type: 'line',
+                data: {
+                  labels: sensor.fechas,
+                  datasets: [{
+                    label: 'Consumo',
+                    data: sensor.valores,
+                    borderColor: 'rgba(255,99,132,1)',
+                    backgroundColor: 'rgba(255,99,132,0.2)',
+                    tension: 0.3
+                  }]
+                },
+                options: {
+                  responsive: true,
+                  maintainAspectRatio: true,
+                  scales: {
+                    y: { beginAtZero: true }
+                  }
+                }
+              });
+            }
+          }, 300);
+        });
+      });
+    });
+}
+</script>
+
+
+{% endblock  %}
+

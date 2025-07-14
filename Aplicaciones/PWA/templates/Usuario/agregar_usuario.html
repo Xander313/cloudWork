@@ -1,0 +1,70 @@
+{% extends 'layouts/admin.html' %}
+{% load static %}
+{% block content %}
+
+<div class="container py-4 d-flex justify-content-center align-items-center" style="min-height: 90vh;">
+    <div class="w-100" style="max-width: 400px;">
+        <div class="card shadow-sm">
+            <div class="card-header bg-primary text-white text-center">
+                <h2 class="mb-0 py-2"><i class="fa-solid fa-user-plus"></i> Registrar Usuario</h2>
+            </div>
+            <div class="card-body px-4 py-4">
+                <form method="post" action="{% url 'agregar_usuario' %}">
+                    {% csrf_token %}
+                    <div class="mb-4">
+                        <label for="correo" class="form-label"><i class="fa-solid fa-envelope"></i> Correo:</label>
+                        <input type="email" name="correo" id="correo" class="form-control" required>
+                        <small id="correoDuplicado" class="text-danger" style="display:none; margin-top: 5px;">
+                            ⚠️ Este correo ya está registrado.
+                        </small>
+
+                    </div>
+                    <div class="mb-4">
+                        <label for="nombre" class="form-label"><i class="fa-solid fa-user"></i> Nombre:</label>
+                        <input type="text" name="nombre" id="nombre" class="form-control" required>
+                    </div>
+                    <div class="mb-4">
+                        <label for="telefono" class="form-label"><i class="fa-solid fa-phone"></i> Teléfono:</label>
+                        <input type="text" name="telefono" id="telefono" class="form-control">
+                    </div>
+                    <div class="mb-4">
+                        <label for="direccion" class="form-label"><i class="fa-solid fa-location-dot"></i> Dirección:</label>
+                        <input type="text" name="direccion" id="direccion" class="form-control">
+                    </div>
+
+                    <div class="d-flex mt-4 gap-3">
+                        <a href="{% url 'lista_usuario'%}" class="btn btn-outline-danger" style="min-width: 120px;">
+                            <i class="fa-solid fa-x"></i> Cancelar
+                        </a>
+                        <button type="submit" class="btn btn-primary flex-grow-1" id="btnAgregar">
+                            <i class="fa-solid fa-user-check"></i> Crear Usuario
+                        </button>
+                    </div>
+
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<script>
+    const correosExistentes = {{ correos|safe }};
+
+    document.getElementById('correo').addEventListener('input', function () {
+        const correoInput = this.value.trim().toLowerCase();
+        const boton = document.querySelector('button[type="submit"]');
+        const mensaje = document.getElementById('correoDuplicado');
+
+        if (correosExistentes.includes(correoInput)) {
+            mensaje.style.display = 'block';
+            boton.disabled = true;
+        } else {
+            mensaje.style.display = 'none';
+            boton.disabled = false;
+        }
+    });
+</script>
+
+
+{% endblock %}

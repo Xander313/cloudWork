@@ -1,3 +1,4 @@
 from django.contrib import admin
-
-# Register your models here.
+from .models import LimiteUsuario
+# Register your models here.f
+admin.site.register(LimiteUsuario)

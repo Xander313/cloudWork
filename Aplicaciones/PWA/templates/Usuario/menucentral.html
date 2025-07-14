@@ -10,13 +10,19 @@
 
 {% block content %}
 <div class="contenidoCentral">
-    <h3>Bienvenido</h3>
+    <h2>Bienvenido, {{ nombre_usuario }}</h2>
     <div class="elementosMenuCentral">
-        <a href="{% url 'ver_notificaciones_por_usuario' usuario_id %}"> <i class="fa-solid fa-bell"></i> Notificaciones</a>
+        <a href="{% url 'ver_notificaciones_por_usuario' usuario_id %}"> <img src="{% static 'pwa/img/notificacion.png'%}" style="width: 32px; height: auto;"></i> Mis Notificaciones</a>
 
-        <a href="{% url 'presentar_limite_usuario' usuario_id %}"><i class="fa-solid fa-server"></i> Mis sensores</a>
-        <a href="{% url 'estadisticaPresenracion' usuario_id %}"><i class="fa-solid fa-square-poll-horizontal"></i> Estaditicas</a>
+        <a href="{% url 'presentar_limite_usuario' usuario_id %}"><img src="{% static 'pwa/img/medidor.png'%}" style="width: 32px; height: auto;"> Mis Medidores</a>
+        <a href="{% url 'estadisticaPresenracion' usuario_id %}"><img src="{% static 'pwa/img/analitica.png'%}" style="width: 32px; height: auto;"> Mis Estadíticas</a>
     </div>
 </div>
+
+<div class="mainButtons">
+    <a href="#" onclick="confirm()"><i class="fa-solid fa-right-from-bracket"></i></a>
+</div>
+
+
 
 {% endblock %}

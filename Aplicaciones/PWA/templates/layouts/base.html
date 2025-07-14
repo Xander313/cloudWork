@@ -10,7 +10,7 @@
 
 
 
-    <title>{% block title %}HydroSys{% endblock %}</title>
+    <title>{% block title %}AquAlert{% endblock %}</title>
     <script src="https://code.jquery.com/jquery-3.7.1.js" integrity="sha256-eKhayi8LEQwp4NKxN+CfCh+3qOVUtJn3QNZ0TciWLP4=" crossorigin="anonymous"></script>
     <!-- Importando jquery validation -->
     <script src="https://cdn.jsdelivr.net/npm/jquery-validation@1.19.5/dist/jquery.validate.js" ></script>
@@ -61,11 +61,56 @@
         }
     }
 
+
     </script>
 
+
+    <style>
+
+        .imagenesLogoss {
+            display: flex;
+            justify-content: center; 
+            align-items: center;
+            gap: 20px; 
+            margin: 20px 0;
+        }
+
+        .imagenesLogos img {
+            width: 110px;
+            height: auto; /* mantiene proporciones */
+            object-fit: contain;
+        }
+
+        .tandacatoe{
+            width: 80px !important;
+        }
+
+        .tituloCentrale{
+            font-size: 1.3rem;
+        }
+
+
+    </style>
+
+
     <header>
-    <button onclick="activarPantallaCompleta()">Activar pantalla completa</button>
-        <h1 style="font-family: 'Montserrat';">HydroSys 💧 {% block seccion %}{% endblock %}</h1>
+    <button style="display: none;" onclick="activarPantallaCompleta()">Activar pantalla completa</button>
+            <div class="contenidoResponsiv fade">
+                <p style="font-family: 'Montserrat';"><em>Patrocinado por:</em></p>
+                <div class="imagenesLogoss">
+                    <img src="{% static 'pwa/img/utclogo.avif' %}" alt="Logo UTC">
+                    <img class="tandacatoe" src="{% static 'pwa/img/tandacato.png' %}" alt="Logo TANDACATO">
+                    <img src="{% static 'pwa/img/si.png' %}" alt="Logo SI">
+                </div>
+                <h1 style="font-family: 'Montserrat'; font-size: 2.5rem;" class="tituloCentrale titleFade">AquAlert 💧 Sistema de Notificación</h1>
+                <br>
+                <br>
+            </div>
+        
+        {% if usuario_id %}
+            <h1 style="font-family: 'Montserrat';">AquAlert 💧 {% block seccion %}{% endblock %}</h1>
+        {% endif %}
+
     </header>
     <main>
         {% block content %}

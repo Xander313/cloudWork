@@ -47,7 +47,7 @@ def construir_mensaje_consumo(consumo_diario, nombre, consumo_estatico, consumo_
 def construir_mensaje_alerta_roja(nombre, consumo_estatico, consumo_dinamico, consumo_total, umbral, limite_diario, consumo_diario):
 
     exceso = consumo_dinamico - umbral
-    multa = exceso / 1000
+    multa = (exceso / 1000)*1.5
     fecha_envio = localtime().strftime("%d/%m/%Y %H:%M")
 
     mensaje = (

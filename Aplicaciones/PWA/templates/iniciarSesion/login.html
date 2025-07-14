@@ -117,12 +117,71 @@
         .hidden {
             display: none;
         }
+
+
+        .contenidoResponsive{
+            display: none;
+        }
+
+
+        @media screen and (max-width: 600px) {
+            .imagenesLogos {
+                display: flex;
+                justify-content: center;
+                align-items: center;
+                gap: 20px; 
+                margin: 20px 0;
+            }
+
+            .imagenesLogos img {
+                width: 100px;
+                height: auto; 
+                object-fit: contain;
+            }
+
+            .tandacato{
+                width: 60px !important;
+            }
+
+            .tituloCentralx{
+                font-size: 1rem;
+                text-align: center;
+            }
+
+            
+            .contenidoResponsive{
+                display: block;
+            }
+
+            .contenidoResponsiv{
+            display: none;
+            }
+
+            .auth-container {
+
+                width: 90%;
+
+            }
+        }
     </style>
 </head>
 <body>
     <div class="auth-container">
         <div id="login-form" class="form-container">
-            <h2 class="form-title">Iniciar Sesión</h2>
+            <div class="contenidoResponsive fade">
+                <p><em>Patrocinado por:</em></p>
+                <div class="imagenesLogos">
+                    <img src="{% static 'pwa/img/utclogo.avif' %}" alt="Logo UTC">
+                    <img class="tandacato" src="{% static 'pwa/img/tandacato.png' %}" alt="Logo TANDACATO">
+                    <img src="{% static 'pwa/img/si.png' %}" alt="Logo SI">
+                </div>
+                <h1 class="tituloCentralx titleFade">AquAlert 💧 Sistema de Notificación</h1>
+                <br>
+                <br>
+            </div>
+            
+
+            <h2 class="form-title fade">Iniciar Sesión</h2>
             
             {% if messages %}
                 {% for message in messages %}
@@ -130,7 +189,7 @@
                 {% endfor %}
             {% endif %}
             
-            <form method="post" action="{% url 'login' %}">
+            <form method="post"  class="fade" action="{% url 'login' %}" >
                 {% csrf_token %}
                 <div class="form-group">
                     <label for="correoUsuario">Correo Electrónico</label>
@@ -142,10 +201,10 @@
                 </div>
                 <button type="submit" class="btn">Ingresar</button>
             </form>
-            
+            <!--
             <div class="toggle-form">
                 ¿No tienes cuenta? <a onclick="toggleForm('register')">Regístrate aquí</a>
-            </div>
+            </div>-->
         </div>
         
         <div id="register-form" class="form-container hidden">
@@ -197,6 +256,64 @@
             </form>
         </div>
     </div>
+
+
+{% if mostrar_modal %}
+<style>
+  /* Fondo oscuro para el modal */
+  #modalBackdrop {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5); /* ← oscurece más el fondo */
+    z-index: 1040;
+  }
+
+  #modalPassword {
+    z-index: 1050;
+  }
+  .nuevaContra{
+    font-size: 1.3rem;
+  }
+  .inputContra{
+    border: 2px solid aqua;
+  }
+</style>
+
+<div id="modalBackdrop"></div>
+<div class="modal fade show" id="modalPassword" style="display: block;" tabindex="-1" role="dialog">
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content shadow">
+      <form method="post" action="{% url 'establecer_password' %}">
+        {% csrf_token %}
+        <div class="modal-header bg-dark text-white">
+          <h5 class="modal-title">Establecer Contraseña</h5>
+        </div>
+        <div class="modal-body">
+        <input type="hidden" name="usuario_id" value="{{ usuario_id }}">
+        <label for="nueva_password" class="form-label nuevaContra">Nueva contraseña:</label>
+        <input type="password" name="nueva_password" id="nueva_password" class="form-control inputContra" required>
+
+        <div class="alert alert-warning mt-3" role="alert">
+            ⚠️ Esta contraseña no podrá ser recuperada automáticamente. Si la olvida, deberá comunicarse directamente con la Junta de Agua Potable.
+        </div>
+        </div>
+        <div class="modal-footer bg-light">
+          <button type="submit" class="btn btn-primary">
+            <i class="fa-solid fa-lock"></i> Guardar
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+{% endif %}
+
+
+
+
 
     <script>
         function toggleForm(formType) {

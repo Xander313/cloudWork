@@ -1,4 +1,4 @@
-from django.shortcuts import render, redirect
+from django.shortcuts import render, redirect, get_object_or_404
 from django.core.mail import send_mail
 from django.urls import reverse
 from django.conf import settings
@@ -9,27 +9,71 @@ from django.contrib.auth.hashers import make_password, check_password
 import random
 # Create your views here.
 
+from django.contrib.auth.hashers import make_password
+
 def login_view(request):
     if request.method == 'POST':
         correo = request.POST.get('correoUsuario')
         password = request.POST.get('passwordUsuario')
-        
-        # Verificación especial para admin
+
         if correo == 'admin' and password == '1234':
             request.session['es_admin'] = True
-            return redirect('panel_admin')  # Redirige al menú central para admin
-        
+            return redirect('panel_admin')  
+
         try:
             usuario = Usuario.objects.get(correoUsuario=correo)
+
+            if usuario.passwordUsuario == "":
+                request.session['pendiente_password'] = usuario.id
+                return render(request, 'iniciarSesion/login.html', {
+                    'mostrar_modal': True,
+                    'usuario_id': usuario.id
+                })
+
             if check_password(password, usuario.passwordUsuario):
                 request.session['usuario_id'] = usuario.id
-                return render(request, 'Usuario/menucentral.html', {'usuario_id': usuario.id})
+                nombre_usuario = usuario.nombreUsuario
+                return render(request, 'Usuario/menucentral.html', {
+                    'usuario_id': usuario.id,
+                    'nombre_usuario': nombre_usuario
+                })
             else:
                 messages.error(request, 'Contraseña incorrecta')
         except Usuario.DoesNotExist:
             messages.error(request, 'Usuario no encontrado')
-            
+
     return render(request, 'iniciarSesion/login.html')
+
+
+
+
+
+def establecer_password(request):
+    if request.method == 'POST':
+        usuario_id = request.POST.get('usuario_id')
+        nueva_pass = request.POST.get('nueva_password')
+
+        try:
+            usuario = Usuario.objects.get(id=usuario_id)
+            usuario.passwordUsuario = make_password(nueva_pass)
+            usuario.save()
+            messages.success(request, 'Contraseña configurada correctamente.')
+            request.session['usuario_id'] = usuario.id
+            return render(request, 'Usuario/menucentral.html', {
+                'usuario_id': usuario.id,
+                'nombre_usuario': usuario.nombreUsuario
+            })
+        except Usuario.DoesNotExist:
+            messages.error(request, 'Error al configurar contraseña.')
+            return redirect('login')
+
+
+
+
+
+
+
+
 
 
 def registro(request):
@@ -91,5 +135,132 @@ def menuCentral(request):
         request.session['usuario_id'] = usuario_id
     else:
         usuario_id = request.session.get('usuario_id')
+    
+    nombre_usuario = None
+    if usuario_id:
+        try:
+            nombre_usuario = Usuario.objects.get(id=usuario_id).nombreUsuario
+        except Usuario.DoesNotExist:
+            pass
+    print (nombre_usuario)
+    
+    return render(request, 'Usuario/menucentral.html', {
+        'usuario_id': usuario_id,
+        'nombre_usuario': nombre_usuario
+    })
 
-    return render(request, 'Usuario/menucentral.html', {'usuario_id': usuario_id})
+
+
+
+def lista_usuario(request):
+    if not request.session.get('es_admin'):
+        return redirect('login') 
+
+    usuarios = Usuario.objects.all()  
+
+    return render(request, 'Usuario/index.html', {
+        'usuarios': usuarios,
+
+    })
+
+
+
+
+
+def agregar_usuario(request):
+    if not request.session.get('es_admin'):
+        return redirect('login')
+
+    # Extrae todos los correos actuales
+    correos_existentes = list(Usuario.objects.values_list('correoUsuario', flat=True))
+
+    if request.method == 'POST':
+        correo = request.POST.get('correo')
+        nombre = request.POST.get('nombre')
+        telefono = request.POST.get('telefono', '')
+        direccion = request.POST.get('direccion', '')
+
+        if correo in correos_existentes:
+            messages.error(request, 'Ya existe un usuario con ese correo.')
+            return render(request, 'Usuario/agregar_usuario.html', {
+                'correos': correos_existentes,
+                'correo': correo,
+                'nombre': nombre,
+                'telefono': telefono,
+                'direccion': direccion
+            })
+
+        Usuario.objects.create(
+            nombreUsuario=nombre,
+            correoUsuario=correo,
+            telefonoUsuario=telefono,
+            direccionUsuario=direccion,
+            passwordUsuario=""
+        )
+        messages.success(request, 'Usuario registrado correctamente.')
+        return redirect('lista_usuario')
+
+    return render(request, 'Usuario/agregar_usuario.html', {
+        'correos': correos_existentes
+    })
+
+
+
+
+from django.shortcuts import render, redirect, get_object_or_404
+from django.contrib import messages
+from django.contrib.auth.hashers import make_password
+from .models import Usuario
+from django.db.models import ProtectedError
+
+
+def editar_usuario(request, usuario_id):
+    usuario = get_object_or_404(Usuario, id=usuario_id)
+
+    if request.method == 'POST':
+        correo = request.POST.get('correo')
+        nombre = request.POST.get('nombre')
+        telefono = request.POST.get('telefono', '')
+        direccion = request.POST.get('direccion', '')
+        password = request.POST.get('password')
+        eliminar = request.POST.get('eliminar_password')
+
+        if Usuario.objects.filter(correoUsuario=correo).exclude(id=usuario_id).exists():
+            messages.error(request, 'Ya existe un usuario con ese correo.')
+            return render(request, 'Usuario/editar_usuario.html', {
+                'usuario': usuario,
+                'correo': correo,
+                'nombre': nombre,
+                'telefono': telefono,
+                'direccion': direccion
+            })
+
+        usuario.correoUsuario = correo
+        usuario.nombreUsuario = nombre
+        usuario.telefonoUsuario = telefono
+        usuario.direccionUsuario = direccion
+
+        if eliminar == 'true':
+            usuario.passwordUsuario = ""
+
+        elif password:
+            usuario.passwordUsuario = make_password(password)
+
+        usuario.save()
+        messages.success(request, 'Usuario actualizado correctamente.')
+        return redirect('lista_usuario')
+
+
+    return render(request, 'Usuario/editar_usuario.html', {'usuario': usuario})
+
+
+def eliminar_usuario(request, usuario_id):
+    usuario = get_object_or_404(Usuario, id=usuario_id)
+
+    try:
+        usuario.delete()
+        messages.success(request, 'Usuario eliminado exitosamente.')
+    except ProtectedError:
+        messages.error(request, 'No se puede eliminar este usuario porque tiene datos asociados.')
+
+    return redirect('lista_usuario')

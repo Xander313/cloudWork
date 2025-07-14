@@ -1,0 +1,79 @@
+{% extends 'layouts/admin.html' %}
+{% load static %}
+{% block content %}
+
+<div class="container py-4 d-flex justify-content-center align-items-center" style="min-height: 80vh;">
+    <div class="w-100" style="max-width: 400px;">
+        <div class="card shadow-sm">
+            <div class="card-header bg-primary text-white text-center">
+                <h2 class="mb-0 py-2"><i class="fa-solid fa-user-pen"></i> Editar Usuario</h2>
+            </div>
+            <div class="card-body px-4 py-4">
+
+
+
+                <form method="post">
+                    {% csrf_token %}
+                    <div class="mb-4">
+                        <label for="correo" class="form-label"><i class="fa-solid fa-envelope"></i> Correo:</label>
+                        <input type="email" name="correo" id="correo"
+                            value="{{ correo|default:usuario.correoUsuario }}"
+                            class="form-control" required>
+                            {% if messages %}
+                                {% for message in messages %}
+                                    <div style="color: red;" class="alert alert-{{ message.tags }}">{{ message }}</div>
+                                {% endfor %}
+                            {% endif %}
+                    </div>
+                    <div class="mb-4">
+                        <label for="nombre" class="form-label"><i class="fa-solid fa-user"></i> Nombre:</label>
+                        <input type="text" name="nombre" id="nombre"
+                            value="{{ nombre|default:usuario.nombreUsuario }}"
+                            class="form-control" required>
+                    </div>
+                    <div class="mb-4">
+                        <label for="telefono" class="form-label"><i class="fa-solid fa-phone"></i> Teléfono:</label>
+                        <input type="text" name="telefono" id="telefono"
+                            value="{{ telefono|default:usuario.telefonoUsuario }}"
+                            class="form-control">
+                    </div>
+                    <div class="mb-4">
+                        <label for="direccion" class="form-label"><i class="fa-solid fa-location-dot"></i> Dirección:</label>
+                        <input type="text" name="direccion" id="direccion"
+                            value="{{ direccion|default:usuario.direccionUsuario }}"
+                            class="form-control">
+                    </div>
+                    <div class="mb-4">
+                        <label for="password" class="form-label"><i class="fa-solid fa-lock"></i> Contraseña:</label>
+                        <div class="input-group">
+                            {% if usuario.passwordUsuario %}
+                            <div class="d-grid mt-2">
+                                <button type="submit" name="eliminar_password" value="true" class="btn btn-danger">
+                                    <i class="fa-solid fa-ban"></i> Eliminar Contraseña
+                                </button>
+                                <small class="text-muted mt-1 text-center">
+                                    Esto dejará al usuario sin acceso hasta que configure su contraseña en el próximo inicio de sesión.
+                                </small>
+                            </div>
+                            {% else %}
+                                <small class="text-muted mt-1 text-center">Contraseña aún no creada</small>
+                            {% endif %}
+
+                        </div>
+                    </div>
+                    <div class="d-flex mt-4 gap-3">
+                        <a href="{% url 'lista_usuario'%}" class="btn btn-outline-danger" style="min-width: 120px;">
+                            <i class="fa-solid fa-x"></i> Cancelar
+                        </a>
+                        <button type="submit" class="btn btn-primary flex-grow-1" id="btnAgregar">
+                            <i class="fa-solid fa-floppy-disk"></i> Actualizar Usuario
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% endblock %}
+

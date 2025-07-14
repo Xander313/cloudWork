@@ -4,7 +4,9 @@ from django.db import models
 class Usuario(models.Model):
     nombreUsuario = models.CharField(max_length=100)
     correoUsuario = models.EmailField(max_length=100, unique=True)
-    passwordUsuario = models.CharField(max_length=100)
+    passwordUsuario = models.CharField(max_length=100, default= "")
+    telefonoUsuario = models.CharField(max_length=20, default="")
+    direccionUsuario = models.CharField(max_length=255, default="")
     fechaCreacion = models.DateTimeField(auto_now_add=True)
 
     def __str__(self):

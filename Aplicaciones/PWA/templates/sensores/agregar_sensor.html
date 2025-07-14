@@ -1,0 +1,142 @@
+{% extends 'layouts/admin.html' %}
+{% load static %}
+{% block content %}
+
+
+<div class="container py-4">
+    <div class="row justify-content-center">
+        <!-- 🧾 Formulario (col izquierda) -->
+        <div class="col-lg-5 mb-4">
+            <div class="card shadow-sm">
+                <div class="card-header bg-primary text-white text-center">
+                    <h2 class="mb-0 py-2"><i class="fa-solid fa-droplet"></i> Medidor de Agua</h2>
+                </div>
+                <div class="card-body px-4 py-4">
+                    <form method="post" action="{% url 'agregar_sensor' %}" autocomplete="off">
+                        {% csrf_token %}
+                        <div class="mb-3">
+                            <label for="sensorID" class="form-label"><i class="fa-solid fa-hashtag"></i> Numero de Medidor de Agua:</label>
+                            <input type="number" name="sensorID" id="sensorID" class="form-control" required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="nombreSensor" class="form-label"><i class="fa-solid fa-microchip"></i> Familia (Referencia):</label>
+                            <input type="text" name="nombreSensor" id="nombreSensor" class="form-control" required>
+                        </div>
+                        <div class="inputs mt-4">
+                            <label><b>Latitud:</b></label>
+                            <input readonly type="text" name="latitud" id="latitud" class="form-control">
+                            <br>
+                            <label><b>Longitud:</b></label>
+                            <input readonly type="text" name="longitud" id="longitud" class="form-control">
+                        </div>
+                        <div class="d-flex mt-4 gap-3">
+                            <a href="{% url 'lista_sensor'%}" class="btn btn-outline-danger w-30" style="flex: 0 0 30%;">
+                                <i class="fa-solid fa-x"></i> Cancelar
+                            </a>
+                            <button type="submit" class="btn btn-primary flex-grow-1" id="btnAgregar">
+                                <i class="fa-solid fa-plus"></i> Registrar Medidor
+                            </button>
+                        </div>
+
+
+                    </form>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-lg-7 mb-4">
+            <label class="mb-2"><b>Zona Geográfica Permitida:</b></label>
+            <div id="mapa_cliente" class="mapa" style="border:1px solid #aaa; height:450px;"></div>
+            <div id="errorCoordenadas" class="text-danger mt-3 text-center" style="display:none;">
+                Ubicación fuera de zona permitida
+            </div>
+        </div>
+
+    </div>
+</div>
+
+
+
+<script>
+function initMap() {
+    const latitudInput = document.getElementById("latitud");
+    const longitudInput = document.getElementById("longitud");
+    const botonAgregar = document.getElementById("btnAgregar");
+
+    const coordenadasInicio = { lat: -0.7415954958310084, lng: -78.64123031371885 };
+
+    const mapa = new google.maps.Map(document.getElementById("mapa_cliente"), {
+        center: coordenadasInicio,
+        zoom: 16,
+        mapTypeId: google.maps.MapTypeId.ROADMAP
+    });
+
+    const marcador = new google.maps.Marker({
+        position: coordenadasInicio,
+        map: mapa,
+        draggable: true,
+        title: "Arrástrame o haz clic en el mapa"
+    });
+
+    const coordenadasZona = [
+        { lat: -0.7364113429470731, lng: -78.64182017298604 },
+        { lat: -0.7382487038585325, lng: -78.64051936532326 },
+        { lat: -0.7385284895693702, lng: -78.64007797353952 },
+        { lat: -0.7399363701292166, lng: -78.63954326673161 },
+        { lat: -0.7395716827627106, lng: -78.63858448695582 },
+        { lat: -0.743553567775562,  lng: -78.63794954258522 },
+        { lat: -0.7455735263016952,  lng: -78.64225290103482 },
+        { lat: -0.7436044463933568, lng: -78.64289528140279 },
+        { lat: -0.7429337389406793, lng: -78.64363599034714 },
+        { lat: -0.7414971255382983, lng: -78.64370210686344 },
+        { lat: -0.7401897324232556, lng: -78.64373455412628 },
+        { lat: -0.739381818188093,  lng: -78.6434588784936 },
+        { lat: -0.7384243120840294, lng: -78.64308957563733 },
+        { lat: -0.7378344430874928, lng: -78.64282079641366 },
+        { lat: -0.7373829516594358, lng: -78.6424991686051 },
+        { lat: -0.7364113429470731, lng: -78.64182017298604 }
+    ];
+
+    const poligono = new google.maps.Polygon({
+        paths: coordenadasZona,
+        strokeColor: "#28a745",
+        strokeOpacity: 0.9,
+        strokeWeight: 2,
+        fillColor: "#28a745",
+        fillOpacity: 0.35
+    });
+
+    poligono.setMap(mapa);
+
+    // Validación inicial
+    const dentroInicial = google.maps.geometry.poly.containsLocation(marcador.getPosition(), poligono);
+    document.getElementById("errorCoordenadas").style.display = dentroInicial ? "none" : "block";
+    botonAgregar.disabled = !dentroInicial;
+
+    // Evento clic
+    mapa.addListener("click", function(event) {
+        const latLng = event.latLng;
+        marcador.setPosition(latLng);
+        latitudInput.value = latLng.lat();
+        longitudInput.value = latLng.lng();
+
+        const dentro = google.maps.geometry.poly.containsLocation(latLng, poligono);
+        document.getElementById("errorCoordenadas").style.display = dentro ? "none" : "block";
+        botonAgregar.disabled = !dentro;
+    });
+
+    // Evento drag
+    marcador.addListener("dragend", function(event) {
+        const latLng = event.latLng;
+        latitudInput.value = latLng.lat();
+        longitudInput.value = latLng.lng();
+
+        const dentro = google.maps.geometry.poly.containsLocation(latLng, poligono);
+        document.getElementById("errorCoordenadas").style.display = dentro ? "none" : "block";
+        botonAgregar.disabled = !dentro;
+    });
+}
+</script>
+
+
+{% endblock %}

@@ -1,0 +1,144 @@
+{% load static%}
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>{% block title %}Panel Administrativo{% endblock %}</title>
+    
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css" crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <!-- DataTables CSS -->
+
+
+    <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBNmZyqL59rxQ0aGx_Hj3NrPF6pDY76uhk&libraries=geometry&callback=initMap" async defer></script>
+
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css" integrity="sha512-Evv84Mr4kqVGRNSgIGL/F/aIDqQb7xQ2vcrdIwxfjThSH8CSR7PBEakCr51Ck+w+/U6swU2Im1vVX0SVk9ABhg==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <link rel="shortcut icon" href="{% static 'pwa/img/logo.png' %}" type="image/x-icon">
+
+
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/chart.js/dist/chart.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+
+    <link rel="stylesheet" href="//cdn.datatables.net/2.3.1/css/dataTables.dataTables.min.css">
+    <link rel="stylesheet" href="https://cdn.datatables.net/buttons/2.3.1/css/buttons.dataTables.min.css">
+</head>
+<body>
+    <style>
+        body {
+            margin: 0;
+            font-family: Arial, sans-serif;
+        }
+
+        .sidebar {
+            position: fixed;
+            width: 200px;
+            height: 100vh;
+            background-color: #222;
+            color: #fff;
+            padding-top: 20px;
+        }
+
+        .sidebar h2 {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        .sidebar ul {
+            list-style: none;
+            padding-left: 0;
+        }
+
+        .sidebar ul li {
+            padding: 10px;
+            text-align: left;
+        }
+
+        .sidebar ul li a {
+            color: #fff;
+            text-decoration: none;
+            display: block;
+        }
+
+        .sidebar ul li a:hover {
+            background-color: #444;
+        }
+
+        .main-content {
+            margin-left: 200px;
+            padding: 20px;
+        }
+
+    </style>
+
+
+
+    <div class="sidebar">
+        <h2>🔧 Admin</h2>
+        <ul>
+            <li>
+                <a href="{% url 'admin-estadisticas_geograficas' %}">
+                    <i class="fa-solid fa-chart-line"></i> Estadística Histórica
+                </a>
+            </li>
+            <li>
+                <a href="{% url 'admin_estadisticas_geograficas_avanzadas' %}">
+                    <i class="fa-solid fa-chart-column"></i> Estadística Diaria
+                </a>
+            </li>
+            <li>
+                <a href="{% url 'lista_sensor' %}">
+                    <i class="fa-solid fa-gauge-high"></i> Medidores
+                </a>
+            </li>
+            <li>
+                <a href="{% url 'lista_usuario' %}">
+                    <i class="fa-solid fa-users"></i> Usuarios
+                </a>
+            </li>
+            <li>
+                <a href="">
+                    <i class="fa-solid fa-layer-group"></i> Asignaciones
+                </a>
+            </li>
+            <li>
+                <a href="{% url 'cerrar_sesion' %}">
+                    <i class="fa-solid fa-right-from-bracket"></i> Cerrar sesión
+                </a>
+            </li>
+
+
+
+        </ul>
+    </div>
+    <div class="main-content">
+        {% block content %}
+        
+        
+        {% endblock %}
+    </div>
+
+
+    {% if messages %}
+    {% for message in messages %}
+        <script>
+        Swal.fire({
+
+            title: "{% if message.tags == 'error' %}¡ERROR!{% else %}¡ÉXITO!{% endif %}",
+            
+            text: "{{ message }}",
+
+            icon: "{% if message.tags == 'error' %}error{% else %}success{% endif %}"
+
+        });
+        </script>
+    {% endfor %}
+    {% endif %}
+</body>
+</html>
