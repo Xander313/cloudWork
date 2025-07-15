@@ -1,9 +1,14 @@
-
-{% extends 'layouts/admin.html' %}
+{% extends 'layouts/masteradmin.html' %}
 {% load static %}
 {% block content %}
 
-<div class="divPrincipal" style="background:white; margin:auto auto; padding:20px; width:30%; border-radius:10px;">
+<div class="content">
+
+
+
+
+
+<div class="divPrincipal" style="background:white; margin:auto auto; padding:20px; width:60%; border-radius:10px;">
     <h3>Editar asignación de sensor</h3>
 
     <form method="POST" action="{% url 'editar_asignacion' asignacion.id %}">
@@ -36,5 +41,7 @@
             <i class="fa-solid fa-arrow-left"></i> Cancelar
         </a>
     </form>
+</div>
+
 </div>
 {% endblock  %}
