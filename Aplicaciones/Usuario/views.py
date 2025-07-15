@@ -7,6 +7,8 @@ import uuid
 from django.contrib import messages
 from django.contrib.auth.hashers import make_password, check_password
 import random
+from django.db.models import ProtectedError
+
 # Create your views here.
 
 from django.contrib.auth.hashers import make_password
@@ -18,7 +20,7 @@ def login_view(request):
 
         if correo == 'admin' and password == '1234':
             request.session['es_admin'] = True
-            return redirect('panel_admin')  
+            return redirect('listaAsignacion')  
 
         try:
             usuario = Usuario.objects.get(correoUsuario=correo)
@@ -207,14 +209,11 @@ def agregar_usuario(request):
 
 
 
-from django.shortcuts import render, redirect, get_object_or_404
-from django.contrib import messages
-from django.contrib.auth.hashers import make_password
-from .models import Usuario
-from django.db.models import ProtectedError
 
 
 def editar_usuario(request, usuario_id):
+    if not request.session.get('es_admin'):
+        return redirect('login') 
     usuario = get_object_or_404(Usuario, id=usuario_id)
 
     if request.method == 'POST':
@@ -255,6 +254,8 @@ def editar_usuario(request, usuario_id):
 
 
 def eliminar_usuario(request, usuario_id):
+    if not request.session.get('es_admin'):
+        return redirect('login') 
     usuario = get_object_or_404(Usuario, id=usuario_id)
 
     try:

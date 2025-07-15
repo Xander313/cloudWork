@@ -1,0 +1,40 @@
+
+{% extends 'layouts/admin.html' %}
+{% load static %}
+{% block content %}
+
+<form method="POST" action="{% url 'nuevoAsignacion'%}">
+    {% csrf_token %}
+
+    <label for="usuario_id">Selecciona el usuario:</label>
+    <select class="form-select" name="usuario_id" id="usuario_id" required>
+        <option value="" disabled selected>-- Selecciona un usuario --</option>
+        {% for usuario in usuarios %}
+            <option value="{{ usuario.id }}">{{ usuario.nombreUsuario }}</option>
+        {% endfor %}
+    </select>
+
+    <label for="sensor_id">Selecciona el sensor:</label>
+    <select class="form-select" name="sensor_id" id="sensor_id" required>
+        <option value="" disabled selected>-- Selecciona un medidor --</option>
+        {% for sensor in sensores %}
+            <option value="{{ sensor.sensorID }}">{{ sensor.nombreSensor }} (#{{ sensor.sensorID }})</option>
+        {% endfor %}
+    </select>
+
+
+    <label for="medicionBase">Medición base:</label>
+    <input type="text" step="0.01" name="medicionBase" id="medicion_editar" required>
+
+    <label for="limite">Límite Diario (Litros):</label>
+    <input type="text" step="0.01" name="limiteDiario" id="limite_editar" required>
+
+    <label for="umbral">Límite máximo de consumo (Litros):</label>
+    <input type="text" step="0.01" name="umbralAlerta" id="umbral_editar" required>
+
+    <button type="submit">Asignar Sensor</button>
+    <button type="button" onclick="document.getElementById('modal').style.display='none'">Cancelar</button>
+</form>
+
+
+{% endblock %}

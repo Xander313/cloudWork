@@ -1,0 +1,40 @@
+
+{% extends 'layouts/admin.html' %}
+{% load static %}
+{% block content %}
+
+<div class="divPrincipal" style="background:white; margin:auto auto; padding:20px; width:30%; border-radius:10px;">
+    <h3>Editar asignación de sensor</h3>
+
+    <form method="POST" action="{% url 'editar_asignacion' asignacion.id %}">
+        {% csrf_token %}
+
+        <label for="usuario_nombre">Usuario asignado:</label>
+        <input type="text" id="usuario_nombre" value="{{ asignacion.usuario.nombreUsuario }}" class="form-control" readonly>
+
+        <label for="sensor_nombre">Medidor asignado:</label>
+        <input type="text" id="sensor_nombre" value="{{ asignacion.sensor.nombreSensor }} (#{{ asignacion.sensor.sensorID }})" class="form-control" readonly>
+
+        <div class="alert alert-info text-center">
+            <i class="fa-solid fa-circle-info"></i>
+            El usuario y medidor no pueden ser modificados para preservar la integridad de los datos.
+        </div>
+        
+        <label for="medicionBase">Medición base:</label>
+        <input type="number" step="0.01" name="medicionBase" value="{{ medicion_base }}">
+
+        <label for="limiteDiario">Límite Diario (Litros):</label>
+        <input type="number" step="0.01" name="limiteDiario" value="{{ limite_diario }}">
+
+        <label for="umbralAlerta">Umbral de alerta (Litros):</label>
+        <input type="number" step="0.01" name="umbralAlerta" value="{{ umbral_alerta }}">
+
+        <button type="submit" class="btn btn-success mt-3">
+            <i class="fa-solid fa-floppy-disk"></i> Guardar cambios
+        </button>
+        <a href="{% url 'listaAsignacion' %}" class="btn btn-outline-secondary mt-3">
+            <i class="fa-solid fa-arrow-left"></i> Cancelar
+        </a>
+    </form>
+</div>
+{% endblock  %}

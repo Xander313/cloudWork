@@ -18,6 +18,9 @@
                             <label for="sensorID" class="form-label"><i class="fa-solid fa-hashtag"></i> Numero de Medidor de Agua:</label>
                             <input type="number" name="sensorID" id="sensorID" class="form-control" required>
                         </div>
+                        <div id="errorID" style="display:none; color: red;">
+                            ❌ Este ID de medidor ya está registrado. Usa uno diferente.
+                        </div>
                         <div class="mb-3">
                             <label for="nombreSensor" class="form-label"><i class="fa-solid fa-microchip"></i> Familia (Referencia):</label>
                             <input type="text" name="nombreSensor" id="nombreSensor" class="form-control" required>
@@ -126,7 +129,7 @@ function initMap() {
     });
 
     // Evento drag
-    marcador.addListener("dragend", function(event) {
+    marcador.addListener("drag", function(event) {
         const latLng = event.latLng;
         latitudInput.value = latLng.lat();
         longitudInput.value = latLng.lng();
@@ -136,6 +139,28 @@ function initMap() {
         botonAgregar.disabled = !dentro;
     });
 }
+</script>
+
+<script>
+document.addEventListener("DOMContentLoaded", function () {
+    const idsRegistrados = {{ sensor_ids|safe }}; 
+    const inputID = document.getElementById("sensorID");
+    const botonAgregar = document.getElementById("btnAgregar");
+    const mensajeID = document.getElementById("errorID");
+
+    inputID.addEventListener("input", function () {
+        const idIngresado = inputID.value.trim();
+        const esDuplicado = idsRegistrados.includes(parseInt(idIngresado));
+
+        if (esDuplicado) {
+            mensajeID.style.display = "block";
+            botonAgregar.disabled = true;
+        } else {
+            mensajeID.style.display = "none";
+            botonAgregar.disabled = false;
+        }
+    });
+});
 </script>
 
 

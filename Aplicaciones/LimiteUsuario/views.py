@@ -5,7 +5,9 @@ from Aplicaciones.UsuarioSensor.models import UsuarioSensor
 from Aplicaciones.LimiteUsuario.models import LimiteUsuario
 from Aplicaciones.ConsumoEstatico.models import ConsumoEstatico
 from Aplicaciones.consumoDinamico.models import ConsumoDinamico
+from Aplicaciones.Notificaciones.models import Notificacion
 from django.contrib import messages
+from django.db.models import ProtectedError
 
 from django.utils import timezone
 
@@ -167,3 +169,174 @@ def eliminar_usuario_sensor(request, id):
 
     messages.success(request, "Sensor y datos asociadas eliminadas correctamente.")
     return redirect('presentar_limite_usuario', id=usuario_id)
+
+
+
+
+
+
+#PARA CLOUD
+
+
+
+
+
+
+def nuevoAsignacion(request):
+    usuarios = Usuario.objects.all().order_by('nombreUsuario')
+    sensores_asignados = UsuarioSensor.objects.values_list('sensor_id', flat=True)
+    sensores = Sensor.objects.exclude(sensorID__in=sensores_asignados).order_by('nombreSensor')
+
+    if request.method == 'POST':
+        usuario_id = request.POST.get('usuario_id')
+        sensor_id = request.POST.get('sensor_id')
+        medicion_base = request.POST.get('medicionBase', '0').replace(',', '.')
+        limite_diario = request.POST.get('limiteDiario', '0').replace(',', '.')
+        umbral_alerta = request.POST.get('umbralAlerta', '0').replace(',', '.')
+        tiempo_minutos = 1
+
+        usuario = get_object_or_404(Usuario, pk=usuario_id)
+
+        try:
+            sensor = Sensor.objects.get(sensorID=sensor_id)
+        except Sensor.DoesNotExist:
+            messages.error(request, f"❌ Medidor con Número '#{sensor_id}' no está registrado.")
+            return render(request, 'asingacion/crear_asignacion.html', {
+                'usuarios': usuarios,
+                'sensores': sensores,
+                'usuario_id': usuario_id,
+                'sensor_id': sensor_id,
+                'medicion_base': medicion_base,
+                'limite_diario': limite_diario,
+                'umbral_alerta': umbral_alerta,
+                'tiempo_minutos': tiempo_minutos
+            })
+
+        usuario_sensor = UsuarioSensor.objects.create(
+            usuario=usuario,
+            sensor=sensor,
+            ubicacionSensor= "Casa 1"
+        )
+
+        ConsumoEstatico.objects.create(
+            usuarioSensor=usuario_sensor,
+            consumoEstatico=medicion_base,
+            fechaCorte=timezone.now()
+        )
+
+        LimiteUsuario.objects.create(
+            usuarioSensor=usuario_sensor,
+            limiteDiario=limite_diario,
+            umbralAlerta=umbral_alerta,
+            tiempoMinutos=tiempo_minutos
+        )
+
+        messages.success(request, f"Medidor con Número '#{sensor_id}' asignado correctamente a {usuario.nombreUsuario}.")
+        return redirect('listaAsignacion')  
+
+    return render(request, 'asingacion/crear_asignacion.html', {
+        'usuarios': usuarios,
+        'sensores': sensores
+    })
+
+
+def editar_asignacion(request, asignacion_id):
+    asignacion = get_object_or_404(UsuarioSensor, id=asignacion_id)
+
+    consumo_obj = ConsumoEstatico.objects.filter(usuarioSensor=asignacion).order_by('fechaCorte').first()
+    limite_obj = LimiteUsuario.objects.filter(usuarioSensor=asignacion).order_by('-fechaCambio').first()
+
+    if request.method == 'POST':
+        medicion_base = request.POST.get('medicionBase', '0').replace(',', '.')
+        limite_diario = request.POST.get('limiteDiario', '0').replace(',', '.')
+        umbral_alerta = request.POST.get('umbralAlerta', '0').replace(',', '.')
+        tiempo_minutos = request.POST.get('tiempoMinutos', '0').replace(',', '.')
+
+        asignacion.ubicacionSensor = "Casa 1"
+        asignacion.save()
+
+        if consumo_obj:
+            consumo_obj.consumoEstatico = medicion_base
+            consumo_obj.save()
+        else:
+            ConsumoEstatico.objects.create(
+                usuarioSensor=asignacion,
+                consumoEstatico=medicion_base
+            )
+
+        if limite_obj:
+            limite_obj.limiteDiario = limite_diario
+            limite_obj.umbralAlerta = umbral_alerta
+            limite_obj.tiempoMinutos = tiempo_minutos
+            limite_obj.save()
+        else:
+            LimiteUsuario.objects.create(
+                usuarioSensor=asignacion,
+                limiteDiario=limite_diario,
+                umbralAlerta=umbral_alerta,
+                tiempoMinutos=tiempo_minutos
+            )
+
+        messages.success(request, "Asignación actualizada correctamente.")
+        return redirect('listaAsignacion') 
+
+    # Convertir valores con punto como separador
+    medicion_base = '{:.2f}'.format(consumo_obj.consumoEstatico) if consumo_obj else ''
+    limite_diario = '{:.2f}'.format(limite_obj.limiteDiario) if limite_obj else ''
+    umbral_alerta = '{:.2f}'.format(limite_obj.umbralAlerta) if limite_obj else ''
+    tiempo_minutos = str(limite_obj.tiempoMinutos) if limite_obj else ''
+
+    context = {
+        'asignacion': asignacion,
+        'medicion_base': medicion_base,
+        'limite_diario': limite_diario,
+        'umbral_alerta': umbral_alerta,
+        'tiempo_minutos': tiempo_minutos
+    }
+
+    return render(request, 'asingacion/editar_asignacion.html', context)
+
+
+
+def eliminar_asignacion(request, asignacion_id):
+    if request.method == 'POST':
+        asignacion = get_object_or_404(UsuarioSensor, id=asignacion_id)
+
+        try:
+            ConsumoEstatico.objects.filter(usuarioSensor=asignacion).delete()
+            ConsumoDinamico.objects.filter(usuarioSensor=asignacion).delete()
+            LimiteUsuario.objects.filter(usuarioSensor=asignacion).delete()
+            Notificacion.objects.filter(usuarioSensor=asignacion).delete()
+
+            asignacion.delete()
+            messages.success(request, "✅ Asignación y todos sus registros asociados fueron eliminados.")
+        except ProtectedError as e:
+            messages.error(request, f"❌ No se pudo eliminar por restricciones: {e}")
+
+        return redirect('listaAsignacion')
+
+
+
+from django.core.serializers.json import DjangoJSONEncoder
+import json
+
+def listaAsignacion(request):
+    asignaciones = UsuarioSensor.objects.select_related('sensor', 'usuario').all()
+
+    asignaciones_js = []
+    for a in asignaciones:
+        asignaciones_js.append({
+            'id': a.id,
+            'sensorID': a.sensor.sensorID,
+            'latitud': a.sensor.latitud,
+            'longitud': a.sensor.longitud,
+            'ubicacion': a.ubicacionSensor,
+            'usuario': a.usuario.nombreUsuario
+        })
+
+    context = {
+        'asignaciones': asignaciones,
+        'asignaciones_js': json.dumps(asignaciones_js, cls=DjangoJSONEncoder)
+    }
+
+    return render(request, 'asingacion/index.html', context)

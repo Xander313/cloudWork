@@ -167,6 +167,26 @@ main {
 
 
 
+.tituloFinal {
+    opacity: 0;
+    visibility: hidden;
+    transition: opacity 0.6s ease-in-out, visibility 0s linear 0.6s;
+}
+
+.tituloInicial {
+    animation: zoomInOut 1s ease-in-out forwards;
+}
+
+@keyframes zoomInOut {
+    0% { transform: scale(1); opacity: 1; }
+    50% { transform: scale(1.2); }
+    100% { opacity: 0; }
+}
+
+
+
+
+
 
 @keyframes aparecerSuavemente {
     0% {

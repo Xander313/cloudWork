@@ -181,7 +181,7 @@
             </div>
             
 
-            <h2 class="form-title fade">Iniciar Sesión</h2>
+            <h2 class="form-title titleFade">Iniciar Sesión</h2>
             
             {% if messages %}
                 {% for message in messages %}
@@ -189,7 +189,7 @@
                 {% endfor %}
             {% endif %}
             
-            <form method="post"  class="fade" action="{% url 'login' %}" >
+            <form method="post"  class="titleFade" action="{% url 'login' %}" >
                 {% csrf_token %}
                 <div class="form-group">
                     <label for="correoUsuario">Correo Electrónico</label>
