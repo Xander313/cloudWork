@@ -28,6 +28,12 @@ urlpatterns = [
     path('limiteUsuario/', include('Aplicaciones.LimiteUsuario.urls')),
     path('notificaciones/', include('Aplicaciones.Notificaciones.urls')),
     path('sensores/', include('Aplicaciones.Sensor.urls')),
+    path('consumoEstatico/', include('Aplicaciones.ConsumoEstatico.urls')),
+    path('consumoHistorico/', include('Aplicaciones.ConsumoHistorico.urls')),
+    path('consumoDinamico/', include('Aplicaciones.consumoDinamico.urls')),
+    path('logsUsuario/', include('Aplicaciones.LogsUsuario.urls')),
+    path('tipoMensaje/', include('Aplicaciones.TipoMensaje.urls')),
+    
 
 
 ]
