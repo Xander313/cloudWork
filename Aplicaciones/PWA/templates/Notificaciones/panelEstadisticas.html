@@ -1,7 +1,8 @@
-{% extends 'layouts/admin.html' %}
+{% extends 'layouts/masteradmin.html' %}
 {% load static %}
 {% block content %}
 
+<div class="content">
 
 <style>
     body { 
@@ -14,11 +15,6 @@
       border: 5px solid aqua;
       border-radius: 15px;
 
-    }
-    .elemntosestadisticashistoricas{
-      display: flex;
-      gap: 10px;
-      max-height: 50px;
     }
 
 
@@ -38,15 +34,27 @@
 </div>
 
 
-<div id="leyendaMapa" style="position: absolute; bottom: 10px; left: 10px; background: #b3b3b3; padding: 10px; border-radius: 6px; z-index: 1000;">
+<div id="leyendaMapa" style="
+    position: fixed;
+    bottom: 10px;
+    left: 50px;
+    background: #b3b3b3;
+    padding: 10px;
+    border-radius: 6px;
+    z-index: 1000;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+">
     <strong>📊 Leyenda:</strong><br>
     <span style="color: red;">⬤ Máximo consumo</span><br>
     <span style="color: gold;">⬤ Consumo intermedio</span><br>
     <span style="color: green;">⬤ Mínimo consumo</span>
 </div>
 
+
 <div id="mapaEstadistico" style="height: 600px;"></div>
 
+
+</div>
 <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
 <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
 

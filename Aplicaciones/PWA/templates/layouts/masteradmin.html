@@ -6,9 +6,11 @@
 {% get_admin_setting as admin_setting %}
 <html lang="en">
 
+
 <head>
     <title>{% block title %}{% endblock title %} | Django Black Dashboard </title>
     <link rel="canonical" href="https://app-generator.dev/product/black-dashboard/" />
+    <link rel="stylesheet" href="{% static 'pwa/css/adminmaster.css' %}">
 
     {% include 'includes/head.html' %}
     {% block extrahead %}{% endblock extrahead %}
@@ -16,6 +18,11 @@
 </head>
 
 <body class="{% block bodyclass %}{% endblock bodyclass %}">
+
+
+
+
+
     <div class="wrapper">
         {% block sidebar %}
         {% include 'includes/sidebar.html' %}
@@ -25,9 +32,7 @@
             {% include 'includes/navigation.html' %}
             {% endblock navigation %}
             {% block content %}{% endblock content %}
-            {% block footer %}
-            {% include 'includes/footer.html' %}
-            {% endblock footer %}
+
         </div>
     </div>
     {% block fixed-plugin %}
@@ -35,6 +40,103 @@
     {% endblock fixed-plugin %}
     {% include 'includes/scripts.html' %}
     {% block extrajs %}{% endblock extrajs %}
+
+
+    <script>
+    document.addEventListener("DOMContentLoaded", function () {
+        const toggle = document.querySelector('.bsc');
+        const body = document.body;
+
+        // Estado inicial
+        body.classList.add('oscuro');
+
+        toggle.addEventListener('change', function () {
+            setTimeout(() => {
+                if (this.checked) {
+                    body.classList.remove('claro');
+                    body.classList.add('oscuro');
+                } else {
+                    body.classList.remove('oscuro');
+                    body.classList.add('claro');
+                }
+            }, 400); // 500 milisegundos = medio segundo
+        });
+    });
+
+    </script>
+
+
+    <script>
+    $(document).ready(function() {
+            $('#tabla-asignaciones, #tabla-sensores, #tabla-estatico, #tabla-dinamico, #tabla-historico, #tabla-limite, #tabla-logs, #tabla-notificaciones, #tabla-tipo-mensaje').DataTable({
+                responsive: true,
+                dom: 'Bfrtip',
+                buttons: [
+                    { extend: 'copy', text: '<i class="fa fa-copy"></i> Copiar' },
+                    { extend: 'csv', text: '<i class="fa fa-file-csv"></i> CSV' },
+                    { extend: 'excel', text: '<i class="fa fa-file-excel"></i> Excel' },
+                    { extend: 'pdf', text: '<i class="fa fa-file-pdf"></i> PDF' },
+                    { extend: 'print', text: '<i class="fa fa-print"></i> Imprimir' }
+                ],
+                language: {
+                    url: 'https://cdn.datatables.net/plug-ins/1.13.7/i18n/es-ES.json'
+                }
+            });
+        });
+    </script>
+
+
+    
+    <script async defer src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBNmZyqL59rxQ0aGx_Hj3NrPF6pDY76uhk&callback=initMap"></script>
+    <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBfGs7bFheV6d7HSt1KWV2kVF0pwa8WepM&libraries=geometry&callback=initMap" async defer></script>
+    <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBvOG_2EliIl_A2Pzoz52HkaLZymR7D8wg&callback=initMapaAvanzado" async defer></script>
+    
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" crossorigin="anonymous"></script>
+
+
+
+
+    <!-- 1. jQuery -->
+    <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+    
+    <!-- 2. jQuery Validation -->
+    <script src="https://cdn.jsdelivr.net/npm/jquery-validation@1.19.5/dist/jquery.validate.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/jquery-validation@1.19.5/dist/additional-methods.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/jquery-validation@1.19.5/dist/localization/messages_es.min.js"></script>
+    
+    <!-- 3. Bootstrap CSS & JS -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.3/css/bootstrap.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    
+    <!-- 4. Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css">
+    
+    <!-- 5. DataTables core -->
+    <link rel="stylesheet" href="https://cdn.datatables.net/2.3.1/css/dataTables.dataTables.min.css">
+    <script src="https://cdn.datatables.net/2.3.1/js/dataTables.min.js"></script>
+    <script src="https://cdn.datatables.net/plug-ins/2.3.1/i18n/es-ES.json"></script>
+    
+    <!-- 6. DataTables Buttons (exportación e impresión) -->
+    <link rel="stylesheet" href="https://cdn.datatables.net/buttons/3.2.3/css/buttons.dataTables.min.css">
+    <script src="https://cdn.datatables.net/buttons/3.2.3/js/dataTables.buttons.min.js"></script>
+    <script src="https://cdn.datatables.net/buttons/3.2.3/js/buttons.dataTables.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.2.7/pdfmake.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.2.7/vfs_fonts.js"></script>
+    <script src="https://cdn.datatables.net/buttons/3.2.3/js/buttons.html5.min.js"></script>
+    <script src="https://cdn.datatables.net/buttons/3.2.3/js/buttons.print.min.js"></script>
+    
+    <!-- 7. Bootstrap FileInput -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-fileinput/5.5.4/css/fileinput.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-fileinput/5.5.4/js/fileinput.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-fileinput/5.5.4/js/locales/es.min.js"></script>
+    
+    <!-- 8. SweetAlert2 -->
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+
+
 </body>
 
 </html>

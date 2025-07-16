@@ -2,13 +2,14 @@
 {% load static%}
 
 {% block linksCss %}
-<link rel="stylesheet" href="{% static 'pwa/css/menuCentral.css' %}">
+
 {% endblock %}
 
 {% block title %}Menú Central{% endblock %}
 {% block seccion %}Menú Central{% endblock %}
 
 {% block content %}
+<link rel="stylesheet" href="{% static 'pwa/css/menuCentral.css' %}">
 <div class="contenidoCentral">
     <h2>Bienvenido, {{ nombre_usuario }}</h2>
     <div class="elementosMenuCentral">

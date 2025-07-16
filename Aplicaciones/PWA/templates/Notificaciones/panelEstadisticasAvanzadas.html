@@ -1,21 +1,33 @@
-
-{% extends 'layouts/admin.html' %}
+{% extends 'layouts/masteradmin.html' %}
 {% load static %}
 {% block content %}
-    <!-- Mapa -->
+
+<div class="content">
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/chart.js/dist/chart.min.css">
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 
-    <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBfGs7bFheV6d7HSt1KWV2kVF0pwa8WepM&callback=initMapaAvanzado" async defer></script>
 
     <!-- Scripts -->
 <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 
-<h1 style="font-family: Montserrat;">Estadísticas Diarias</h1>
+<div style="display: flex; align-items: center; gap: 10px; margin-bottom: 10px;">
+  <h1 style="font-family: Montserrat; margin: 0;">Estadísticas Diarias:</h1>
+  <p id="fechaActual" style="margin: 0; font-size: 1.5rem; line-height: 1;">📅</p>
+</div>
+
 <div id="mapaAvanzado" style="height: 600px;"></div>
 
+</div>
+
+
+<script>
+    const fecha = new Date();
+    const opciones = { day: '2-digit', month: 'long', year: 'numeric' };
+    const formato = fecha.toLocaleDateString('es-ES', opciones);
+    document.getElementById('fechaActual').innerText = formato;
+</script>
 
 <style>
     body { 
