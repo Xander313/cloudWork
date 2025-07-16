@@ -1,6 +1,10 @@
 {% extends 'layouts/masteradmin.html' %}
 {% load static %}
 {% block content %}
+
+
+
+
 <div class="content">
     <h1>Creación de nueva asignación</h1>
 
@@ -9,20 +13,21 @@
 
         <!-- 🧑 Selector de usuario + preview -->
         <label for="usuario_id">Selecciona el usuario:</label>
-        <select class="selectpicker" name="usuario_id" id="usuario_id" data-live-search="true" title="Buscar usuario..." required>
-            <option value="" disabled selected>-- Selecciona un usuario --</option>
-            {% for usuario in usuarios %}
-                <option value="{{ usuario.id }}"
-                        {% if usuario.fotoPerfil %}
-                            data-foto="{{ usuario.fotoPerfil.url }}"
-                        {% else %}
-                            data-foto="{% static 'img/default-avatar.png' %}"
-                        {% endif %}>
-                    {{ usuario.nombreUsuario }}
-                </option>
+<select class="selectpicker" name="usuario_id" id="usuario_id" data-live-search="true" title="Buscar usuario..." required>
+    <option value="" disabled selected>-- Selecciona un usuario --</option>
+    {% for usuario in usuarios %}
+        <option value="{{ usuario.id }}"
+            {% if usuario.fotoPerfil %}
+                data-foto="{{ usuario.fotoPerfil.url }}"
+            {% else %}
+                data-foto="{% static 'img/default-avatar.png' %}"
+            {% endif %}>
+            {{ usuario.nombreUsuario }}
+        </option>
+    {% endfor %}
+</select>
 
-            {% endfor %}
-        </select>
+
 
         <div id="imagenUsuario" class="text-center mt-3">
             <img id="previewFoto" src="{% static 'img/default-avatar.png' %}" alt="Foto de usuario"
@@ -60,21 +65,25 @@
     </form>
 </div>
 
-<!-- ⚙️ Scripts para selectpicker y imagen dinámica -->
 <script>
-    $(document).ready(function () {
-        $('.selectpicker').selectpicker();
+$(document).ready(function () {
+    $('.selectpicker').selectpicker();
 
-        $('#usuario_id').on('changed.bs.select', function (e, clickedIndex) {
-            const selectedOption = $(this).find('option').eq(clickedIndex);
-            const fotoUrl = selectedOption.data('foto');
+    $('#usuario_id').on('changed.bs.select', function () {
+        const selectedValue = $(this).val();
+        const option = $(this).find('option[value="' + selectedValue + '"]');
+        const fotoUrl = option.data('foto') || "{% static 'img/default-avatar.png' %}";
 
-            if (fotoUrl && fotoUrl.length > 0) {
-                $('#previewFoto').attr('src', fotoUrl);
-            } else {
-                $('#previewFoto').attr('src', "{% static 'img/default-avatar.png' %}");
-            }
+        console.log('Valor seleccionado:', selectedValue);
+        console.log('URL foto:', fotoUrl);
+
+        $('#previewFoto').fadeOut(100, function () {
+            $(this).attr('src', fotoUrl).fadeIn(150);
         });
     });
+});
 </script>
+
+
+
 {% endblock %}
