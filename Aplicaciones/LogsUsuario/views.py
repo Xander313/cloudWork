@@ -11,3 +11,21 @@ def eliminar_log_usuario(request, id):
     log.delete()
     messages.success(request, 'Log de usuario eliminado correctamente.')
     return redirect('panel_admin')
+
+def editar_log_usuario(request, id):
+    log = LogUsuario.objects.filter(id=id).first()
+    if not log:
+        messages.error(request, 'Log de usuario no encontrado.')
+        return redirect('panel_admin')
+
+    if request.method == 'POST':
+        try:
+            log.evento = request.POST.get('evento')
+            log.usuario = request.POST.get('usuario')
+            log.save()
+            messages.success(request, 'Log de usuario actualizado correctamente.')
+            return redirect('lista_logs_usuario')
+        except Exception as e:
+            messages.error(request, f'Error al actualizar: {e}')
+    
+    return render(request, 'admin/editar_log_usuario.html', {'log': log})

@@ -10,10 +10,16 @@ import random
 from django.db.models import ProtectedError
 from django.core.files.storage import default_storage
 import os
+from Aplicaciones.LogsUsuario.models import LogUsuario  # Ajusta el path real a tu proyecto
+
+
+
 
 # Create your views here.
 
 from django.contrib.auth.hashers import make_password
+
+
 
 def login_view(request):
     if request.method == 'POST':
@@ -39,13 +45,18 @@ def login_view(request):
                 nombre_usuario = usuario.nombreUsuario
 
 
-
-
+                # 👇 Registro en LogUsuario con los campos que definiste
+                LogUsuario.objects.create(
+                    evento='Inicio de sesión',
+                    descripcion=f'El usuario {nombre_usuario} inició sesión correctamente.',
+                    usuario=usuario
+                )
 
                 return render(request, 'Usuario/menucentral.html', {
                     'usuario_id': usuario.id,
                     'nombre_usuario': nombre_usuario
                 })
+
             else:
                 messages.error(request, 'Contraseña incorrecta')
         except Usuario.DoesNotExist:
