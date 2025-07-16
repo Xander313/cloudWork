@@ -24,9 +24,11 @@ def cerrar_sesion(request):
 
 # crear funcion para mostrar datos de todos los modelos
 def panel_admi(request):
-    usuarios = Usuario.objects.all()
+    consumos_estaticos = ConsumoEstatico.objects.all()
+    consumos_historicos = ConsumoHistorico.objects.all() 
 
     return render(request, 'admin/paneladmin.html', {
-        'usuarios': usuarios,
+        'consumos_estaticos': consumos_estaticos,
+        'consumos_historicos': consumos_historicos,
     })
 
