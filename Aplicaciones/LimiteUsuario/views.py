@@ -8,6 +8,10 @@ from Aplicaciones.consumoDinamico.models import ConsumoDinamico
 from Aplicaciones.Notificaciones.models import Notificacion
 from django.contrib import messages
 from django.db.models import ProtectedError
+import requests
+from django.http import JsonResponse
+from django.views.decorators.csrf import csrf_exempt
+import json
 
 from django.utils import timezone
 
@@ -23,28 +27,36 @@ def presentar_limite_usuario(request, id):
     sensores_con_config = []
 
     for sensor in sensores_asignados:
-        # Buscar la última medición base registrada
         try:
             consumo_estatico = ConsumoEstatico.objects.filter(usuarioSensor=sensor).latest('fechaCorte')
             medicion_base = consumo_estatico.consumoEstatico
         except ConsumoEstatico.DoesNotExist:
             medicion_base = ''
 
-        # Buscar configuración de límites
         try:
             limite = LimiteUsuario.objects.filter(usuarioSensor=sensor).latest('fechaCambio')
         except LimiteUsuario.DoesNotExist:
             limite = None
 
+        # Conversión segura
+        latitud_str = str(sensor.sensor.latitud).replace(',', '.')
+        longitud_str = str(sensor.sensor.longitud).replace(',', '.')
+        sensor_id_str = str(sensor.sensor.sensorID)
+
         sensores_con_config.append({
             'id': sensor.id,
             'sensor': sensor.sensor,
+            'sensorID_clean': sensor_id_str,
+            'latitud_clean': latitud_str,
+            'longitud_clean': longitud_str,
             'ubicacionSensor': sensor.ubicacionSensor,
             'medicionBase': medicion_base,
             'limiteDiario': limite.limiteDiario if limite else '',
             'umbralAlerta': limite.umbralAlerta if limite else '',
             'tiempoMinutos': limite.tiempoMinutos if limite else '',
         })
+
+
 
     return render(request, 'LimiteUsuario/configuraciones.html', {
         'sensores': sensores_con_config,
@@ -340,3 +352,48 @@ def listaAsignacion(request):
     }
 
     return render(request, 'asingacion/index.html', context)
+
+
+
+
+@csrf_exempt
+def enviar_pdf_telegram(request):
+    if request.method == 'POST':
+        try:
+            data = json.loads(request.body)
+            
+            if not all(key in data for key in ['pdf_url', 'chat_id', 'mensaje']):
+                return JsonResponse({'status': 'error', 'message': 'Datos incompletos'}, status=400)
+            
+            token = "7992982183:AAH2kYLicJ5zM6NrAYExc_IowviLRJ723zo"
+            
+            requests.post(
+                f"https://api.telegram.org/bot{token}/sendMessage",
+                data={
+                    'chat_id': data['chat_id'],
+                    'text': data['mensaje'],
+                    'parse_mode': 'Markdown'
+                }
+            )
+            
+            if data['pdf_url']:
+                from django.conf import settings
+                pdf_full_url = request.build_absolute_uri(data['pdf_url'])
+                print("URL completa del PDF:", pdf_full_url)
+                
+                pdf_response = requests.get(pdf_full_url, stream=True)
+                pdf_response.raise_for_status()
+                
+                files = {'document': ('reporte.pdf', pdf_response.content)}
+                requests.post(
+                    f"https://api.telegram.org/bot{token}/sendDocument",
+                    data={'chat_id': data['chat_id']},
+                    files=files
+                )
+            
+            return JsonResponse({'status': 'success'})
+            
+        except Exception as e:
+            return JsonResponse({'status': 'error', 'message': str(e)}, status=500)
+    
+    return JsonResponse({'status': 'error', 'message': 'Método no permitido'}, status=405)

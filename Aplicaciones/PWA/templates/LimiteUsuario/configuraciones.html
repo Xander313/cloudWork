@@ -1,6 +1,7 @@
 {% extends 'layouts/baseSesionIniciada.html' %}
 {% load static %}
 
+
 {% block title %}Mis Medidores{% endblock %}
 
 {% block seccion %}Mis Medidores{% endblock %}
@@ -60,6 +61,32 @@
 }
 
 
+/* Asegura que el padre permita posicionamiento absoluto */
+.posicionTarjeta {
+    position: relative;
+    padding-top: 32px; /* para que la fecha no se superponga al contenido */
+}
+
+/* Estilo visual para la fecha */
+.fechaTarjeta {
+    position: absolute;
+    top: 10px;
+    right: 12px;
+    background-color: #ededed;
+    color: #1E1E2C;
+    padding: 4px 8px;
+    border-radius: 4px;
+    font-size: 0.8rem;
+    font-weight: bold;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+}
+
+/* Si estás en modo oscuro */
+body.oscuro .fechaTarjeta {
+    background-color: #1E1E2C;
+    color: #ffffff;
+}
+
 
 @media screen and (max-width: 600px) {
 .formParaRegresarAtras {
@@ -80,13 +107,7 @@
 </form>
 
 {% for sensor in sensores %}
-<div class="contenedorSensores">
-    <div class="misSensores">
-        <div class="sensoresEcnontrados">
-            <h3>📟 {{ sensor.sensor.sensorID }}</h3>
-            
-            <h4>📍 {{ sensor.sensor.nombreSensor }}</h4>
-        </div>
+
         <!--
         <div class="botonesAcciones">
             <a href="#" onclick="abrirModalEditar({
@@ -103,17 +124,98 @@
             </a>
         </div>
         -->
+
+
+<div class="contenedorSensores">
+    <div class="misSensores posicionTarjeta">
+        <div class="fechaTarjeta">
+            📅 Fecha de inscripción: {{ sensor.sensor.fechaInscripcion|date:"d/m/Y" }}
+        </div>
+        <br>
+        <div class="sensoresEcnontrados">
+            <h3><img src="{% static 'pwa/img/velocimetro.png'%}" alt="">   Medidor #{{ sensor.sensor.sensorID }}</h3>
+        <p><em>Su ubicación:</em></p>
+        </div>
+        <div class="botonesAcciones">
+            <a href="#" onclick="mostrarMapaSensor('{{ sensor.latitud_clean }}','{{ sensor.longitud_clean }}','{{ sensor.sensorID_clean }}')">
+                <i style="color: aqua !important;" class="fa-solid fa-location-dot"></i>
+            </a>
+        </div>
     </div>
 </div>
+
+
 {% empty %}
 <div class="contenedorVacio">
     <div class="mensajeVacio">
         <i class="fa-solid fa-circle-info"></i>
-        <p>No hay medidores asignados aún. Comuníquese con la Junta de Agua potable.</p>
+        <p style="color: black !important;">No hay medidores asignados aún. Solicite su medidor ahora.</p>
+
+        <div class="mt-3 p-2 text-start" style="font-size: 14px;">
+            👉 Para recibir el formato de solicitud en Telegram:
+            <ol class="mb-1">
+                <li>Busque su <strong>chat ID</strong> en <a href="https://t.me/userinfobot" target="_blank" style="color: aqua !important;">@userinfobot</a>.</li>
+                <li>Luego, inicie una conversación con nuestro bot <a href="https://t.me/MedidorAguaCloudBot" target="_blank" style="color: aqua !important;">@MedidorAguaCloudBot</a>.</li>
+            </ol>
+        </div>
+
+        <input type="text" id="chat_id_input" placeholder="Ingrese su Chat ID de Telegram" class="form-control mt-2" />
+
+        <button class="btn btn-primary mt-2" onclick="enviarCertificadoTelegram()"> <i class="fab fa-telegram-plane"></i> Enviar Certificado</button>
+
+        <div id="mensajeEnviando" class="text-muted mt-2" style="display: none;">
+            <i class="fa fa-spinner fa-spin"></i> Enviando certificado a Telegram...
+        </div>
     </div>
 </div>
 
 {% endfor %}
+
+
+
+
+<div class="modal fade" id="mapModal" tabindex="-1" aria-labelledby="mapModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 style="color: black !important;" class="modal-title" id="mapModalLabel">Ubicación del Medidor </h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
+            </div>
+            <div class="modal-body">
+                <div id="map" style="height: 400px; width: 100%;"></div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<script>
+    function mostrarMapaSensor(lat, lng, sensorID) {
+        // Mostrar el modal
+        const modal = new bootstrap.Modal(document.getElementById('mapModal'));
+        document.getElementById('mapModalLabel').textContent = `Ubicación del Medidor # ${sensorID}`;
+
+        modal.show();
+
+
+        setTimeout(() => {
+            const ubicacion = { lat: parseFloat(lat), lng: parseFloat(lng) };
+
+            const map = new google.maps.Map(document.getElementById("map"), {
+                center: ubicacion,
+                zoom: 16
+            });
+
+            new google.maps.Marker({
+                position: ubicacion,
+                map: map,
+                title: `Medidor #${sensorID}`
+            });
+        }, 500);
+    }
+</script>
+
+
 
 
 <!--
@@ -222,6 +324,65 @@ function abrirModalEditar(sensor) {
                 window.location.href = eliminarUrlBase + id + "/";
             }
         });
+    }
+</script>
+
+
+
+<script>
+    async function enviarCertificadoTelegram() {
+        const chatId = document.getElementById('chat_id_input').value.trim();
+        const mensajeDiv = document.getElementById('mensajeEnviando');
+
+        if (!chatId) {
+            Swal.fire({
+                icon: 'warning',
+                title: 'Chat ID requerido',
+                text: 'Por favor ingrese un Chat ID de Telegram válido.'
+            });
+            return;
+        }
+
+        const mensaje = `📄 *Certificado de Medidor*\n\nAquí está su certificado solicitado.`;
+
+        try {
+            // Mostrar mensaje de "Enviando..."
+            mensajeDiv.style.display = 'block';
+
+            const response = await fetch('/limiteUsuario/enviarPDF/', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({
+                    pdf_url: '/static/pwa/cert/tramite.pdf',
+                    chat_id: chatId,
+                    mensaje: mensaje
+                })
+            });
+
+            const result = await response.json();
+
+            if (result.status === 'success') {
+                Swal.fire({
+                    title: "¡Enviado!",
+                    text: "El certificado fue enviado a su Telegram.",
+                    icon: "success"
+                });
+            } else {
+                throw new Error(result.message || 'No se pudo enviar');
+            }
+        } catch (error) {
+            Swal.fire({
+                title: "Error",
+                text: "Ocurrió un error al enviar: " + error.message,
+                icon: "error"
+            });
+            console.error("Error:", error);
+        } finally {
+            // Ocultar mensaje de "Enviando..." al finalizar
+            mensajeDiv.style.display = 'none';
+        }
     }
 </script>
 

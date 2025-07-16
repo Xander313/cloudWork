@@ -14,7 +14,7 @@ urlpatterns = [
     path('eliminar_asignacion/<int:asignacion_id>', views.eliminar_asignacion, name='eliminar_asignacion'),
 
 
-
+    path('enviarPDF/', views.enviar_pdf_telegram), 
 
 
 ]

@@ -13,20 +13,19 @@
 
         <!-- 🧑 Selector de usuario + preview -->
         <label for="usuario_id">Selecciona el usuario:</label>
-<select class="selectpicker" name="usuario_id" id="usuario_id" data-live-search="true" title="Buscar usuario..." required>
-    <option value="" disabled selected>-- Selecciona un usuario --</option>
-    {% for usuario in usuarios %}
-        <option value="{{ usuario.id }}"
-            {% if usuario.fotoPerfil %}
-                data-foto="{{ usuario.fotoPerfil.url }}"
-            {% else %}
-                data-foto="{% static 'img/default-avatar.png' %}"
-            {% endif %}>
-            {{ usuario.nombreUsuario }}
-        </option>
-    {% endfor %}
-</select>
-
+        <select class="selectpicker" name="usuario_id" id="usuario_id" data-live-search="true" title="Buscar usuario..." required>
+            <option value="" disabled selected>-- Selecciona un usuario --</option>
+            {% for usuario in usuarios %}
+                <option value="{{ usuario.id }}"
+                    {% if usuario.fotoPerfil %}
+                        data-foto="{{ usuario.fotoPerfil.url }}"
+                    {% else %}
+                        data-foto="{% static 'img/default-avatar.png' %}"
+                    {% endif %}>
+                    {{ usuario.nombreUsuario }}
+                </option>
+            {% endfor %}
+        </select>
 
 
         <div id="imagenUsuario" class="text-center mt-3">
