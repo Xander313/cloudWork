@@ -16,71 +16,6 @@
 {% block content %}
 
 
-<style>
-.botondeRegresoAtras {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    margin-bottom: 10px;
-    width: 43%;
-
-}
-
-.botondeRegresoAtras h3{
-    width: auto;
-    min-width: 80%;
-
-}
-
-.formParaRegresarAtras {
-
-    margin: 0;
-    width: 40%;
-    margin: 10px;
-
-}
-
-.butonRegresar {
-    background-color: #2ecc71;
-    border: none;
-    border-radius: 8px;
-    padding: 10px 16px;
-    margin-left: 5px;
-    font-size: 16px;
-    color: white;
-    cursor: pointer;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-    transition: background-color 0.3s ease;
-
-}
-
-.butonRegresar:hover {
-    background-color: #27ae60;
-}
-.elementosdelRegreso h3 {
-    margin: 0;
-    font-size: 1.2rem;
-    flex: 1;
-    padding-left: 10px;
-}
-
-
-
-@media screen and (max-width: 600px) {
-.botondeRegresoAtras {
-
-    width: 95%;
-
-}
-.botondeRegresoAtras h3 {
-
-    font-size: 1.3rem;
-
-}
-
-}
-</style>
-
 
 
 <div class="botondeRegresoAtras">
@@ -98,21 +33,28 @@
 
 {% for sensor in sensores %}
 <div class="contenedorSensores">
-    <div class="misSensores">
-        <div class="sensoresEcnontrados">
-            <h3>📟 {{ sensor.sensor.nombreSensor }}</h3>
-            <h4>📍 {{ sensor.ubicacionSensor }}</h4>
+    <div class="misSensores posicionTarjeta">
+        <div class="fechaTarjeta">
+            📅 Fecha de inscripción: {{ sensor.sensor.fechaInscripcion|date:"d/m/Y" }}
         </div>
+        <br>
+
+        <div class="sensoresEcnontrados">
+            <h3><img src="{% static 'pwa/img/velocimetro.png'%}" alt="">Medidor #{{ sensor.sensor.sensorID }}</h3>
+            <p><em>Sus estadísticas de consumo:</em></p>
+        </div>
+
         <div class="botonesAcciones">
             <a href="#" onclick="mostrarGrafico('{{ sensor.id }}')">
-                <i class="fa-solid fa-chart-simple"></i>
+                <i class="fa-solid fa-chart-simple icono-fijo"></i>
             </a>
             <a href="#" onclick="mostrarGraficoPie('{{ sensor.id }}')">
-                <i class="fa-solid fa-chart-pie"></i>
+                <i class="fa-solid fa-chart-pie icono-fijo"></i>
             </a>
         </div>
     </div>
 </div>
+
 {% empty %}
 <div class="contenedorVacio">
     <div class="mensajeVacio">

@@ -2,53 +2,75 @@
 {% load static %}
 {% block content %}
 
-<div class="content">
+<div class="content" style="color: black !important;">
+    <div class="container py-4 d-flex justify-content-center align-items-center" style="min-height: 90vh;">
+        <div class="w-100" style="max-width: 400px;">
+            <div class="card shadow-sm">
+                <div class="card-header bg-primary text-white text-center">
+                    <h2 class="mb-0 py-2"><i class="fa-solid fa-user-plus"></i> Registrar Usuario</h2>
+                </div>
+                <div class="card-body px-4 py-4">
+                    <form method="post" action="{% url 'agregar_usuario' %}" enctype="multipart/form-data">
+                        {% csrf_token %}
+                        <div class="mb-4">
+                            <label for="correo" class="form-label"><i class="fa-solid fa-envelope"></i> Correo:</label>
+                            <input type="email" name="correo" id="correo" class="form-control" required>
+                            <small id="correoDuplicado" class="text-danger" style="display:none; margin-top: 5px;">
+                                ⚠️ Este correo ya está registrado.
+                            </small>
+                        </div>
+                        <div class="mb-4">
+                            <label for="nombre" class="form-label"><i class="fa-solid fa-user"></i> Nombre:</label>
+                            <input type="text" name="nombre" id="nombre" class="form-control" required>
+                        </div>
+                        <div class="mb-4">
+                            <label for="fotoPerfil" class="form-label"><i class="fa-solid fa-image"></i> Foto de perfil:</label>
+                            <input type="file" name="fotoPerfil" id="fotoPerfil" class="form-control" accept="image/*">
+                        </div>
+                        <div class="mb-4">
+                            <label for="telefono" class="form-label"><i class="fa-solid fa-phone"></i> Teléfono:</label>
+                            <input type="text" name="telefono" id="telefono" class="form-control">
+                        </div>
+                        <div class="mb-4">
+                            <label for="direccion" class="form-label"><i class="fa-solid fa-location-dot"></i> Dirección:</label>
+                            <input type="text" name="direccion" id="direccion" class="form-control">
+                        </div>
 
-<div class="container py-4 d-flex justify-content-center align-items-center" style="min-height: 90vh;">
-    <div class="w-100" style="max-width: 400px;">
-        <div class="card shadow-sm">
-            <div class="card-header bg-primary text-white text-center">
-                <h2 class="mb-0 py-2"><i class="fa-solid fa-user-plus"></i> Registrar Usuario</h2>
-            </div>
-            <div class="card-body px-4 py-4">
-                <form method="post" action="{% url 'agregar_usuario' %}">
-                    {% csrf_token %}
-                    <div class="mb-4">
-                        <label for="correo" class="form-label"><i class="fa-solid fa-envelope"></i> Correo:</label>
-                        <input type="email" name="correo" id="correo" class="form-control" required>
-                        <small id="correoDuplicado" class="text-danger" style="display:none; margin-top: 5px;">
-                            ⚠️ Este correo ya está registrado.
-                        </small>
+                        <div class="d-flex mt-4 gap-3">
+                            <a href="{% url 'lista_usuario'%}" class="btn btn-outline-danger" style="min-width: 120px;">
+                                <i class="fa-solid fa-x"></i> Cancelar
+                            </a>
+                            <button type="submit" class="btn btn-primary flex-grow-1" id="btnAgregar">
+                                <i class="fa-solid fa-user-check"></i> Crear Usuario
+                            </button>
+                        </div>
 
-                    </div>
-                    <div class="mb-4">
-                        <label for="nombre" class="form-label"><i class="fa-solid fa-user"></i> Nombre:</label>
-                        <input type="text" name="nombre" id="nombre" class="form-control" required>
-                    </div>
-                    <div class="mb-4">
-                        <label for="telefono" class="form-label"><i class="fa-solid fa-phone"></i> Teléfono:</label>
-                        <input type="text" name="telefono" id="telefono" class="form-control">
-                    </div>
-                    <div class="mb-4">
-                        <label for="direccion" class="form-label"><i class="fa-solid fa-location-dot"></i> Dirección:</label>
-                        <input type="text" name="direccion" id="direccion" class="form-control">
-                    </div>
-
-                    <div class="d-flex mt-4 gap-3">
-                        <a href="{% url 'lista_usuario'%}" class="btn btn-outline-danger" style="min-width: 120px;">
-                            <i class="fa-solid fa-x"></i> Cancelar
-                        </a>
-                        <button type="submit" class="btn btn-primary flex-grow-1" id="btnAgregar">
-                            <i class="fa-solid fa-user-check"></i> Crear Usuario
-                        </button>
-                    </div>
-
-                </form>
+                    </form>
+                </div>
             </div>
         </div>
     </div>
 </div>
-</div>
+
+
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        $("#fotoPerfil").fileinput({
+            theme: "fas",
+            showUpload: false,
+            showRemove: true,
+            allowedFileExtensions: ["jpg", "jpeg", "png", "gif"],
+            maxFileSize: 2048,
+            browseLabel: "Seleccionar imagen",
+            removeLabel: "Quitar",
+            msgPlaceholder: "Busca una imagen...",
+            msgSizeTooLarge: "La imagen excede el tamaño permitido de 2 MB.",
+            msgInvalidFileExtension: "Formato inválido. Solo se permiten JPG, JPEG, PNG y GIF.",
+            
+            dropZoneTitle: "📂 Arrastra y suelta tu imagen aquí o haz clic en 'Seleccionar imagen'."
+        });
+    });
+</script>
 
 
 <script>

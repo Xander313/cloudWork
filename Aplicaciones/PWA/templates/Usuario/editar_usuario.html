@@ -14,7 +14,7 @@
 
 
 
-                <form method="post">
+                <form method="post" enctype="multipart/form-data">
                     {% csrf_token %}
                     <div class="mb-4">
                         <label for="correo" class="form-label"><i class="fa-solid fa-envelope"></i> Correo:</label>
@@ -32,6 +32,15 @@
                         <input type="text" name="nombre" id="nombre"
                             value="{{ nombre|default:usuario.nombreUsuario }}"
                             class="form-control" required>
+                    </div>
+                    <div class="mb-4">
+                        <label for="fotoPerfil" class="form-label"><i class="fa-solid fa-image"></i> Foto de perfil:</label>
+
+                        {% if usuario.fotoPerfil %}
+                            <img src="{{ usuario.fotoPerfil.url }}" alt="Foto actual" class="rounded-circle mb-2 shadow" style="width: 80px; height: 80px; object-fit: cover;">
+                        {% endif %}
+
+                        <input type="file" name="fotoPerfil" id="fotoPerfil" accept="image/*">
                     </div>
                     <div class="mb-4">
                         <label for="telefono" class="form-label"><i class="fa-solid fa-phone"></i> Teléfono:</label>
@@ -77,5 +86,28 @@
     </div>
 </div>
 </div>
+
+
+
+
+<script>
+document.addEventListener("DOMContentLoaded", function () {
+    $("#fotoPerfil").fileinput({
+        theme: "fas",
+        language: "es",
+        showUpload: false,
+        showRemove: true,
+        browseLabel: "Seleccionar imagen",
+        removeLabel: "Quitar",
+        allowedFileExtensions: ["jpg", "jpeg", "png", "gif"],
+        maxFileSize: 2048,
+        dropZoneTitle: "📂 Arrastra y suelta tu imagen aquí o haz clic en 'Seleccionar imagen'.",
+        msgPlaceholder: "Busca una imagen...",
+        msgSizeTooLarge: "La imagen excede el tamaño permitido de 2 MB.",
+        msgInvalidFileExtension: "Formato inválido. Solo se permiten JPG, JPEG, PNG y GIF."
+    });
+});
+</script>
+
 {% endblock %}
 

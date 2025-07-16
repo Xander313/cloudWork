@@ -7,6 +7,7 @@ class Usuario(models.Model):
     passwordUsuario = models.CharField(max_length=100, default= "")
     telefonoUsuario = models.CharField(max_length=20, default="")
     direccionUsuario = models.CharField(max_length=255, default="")
+    fotoPerfil = models.FileField(upload_to='fotos_perfil/', blank=True, null=True)
     fechaCreacion = models.DateTimeField(auto_now_add=True)
 
     def __str__(self):

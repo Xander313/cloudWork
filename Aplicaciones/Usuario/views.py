@@ -8,6 +8,8 @@ from django.contrib import messages
 from django.contrib.auth.hashers import make_password, check_password
 import random
 from django.db.models import ProtectedError
+from django.core.files.storage import default_storage
+import os
 
 # Create your views here.
 
@@ -35,6 +37,11 @@ def login_view(request):
             if check_password(password, usuario.passwordUsuario):
                 request.session['usuario_id'] = usuario.id
                 nombre_usuario = usuario.nombreUsuario
+
+
+
+
+
                 return render(request, 'Usuario/menucentral.html', {
                     'usuario_id': usuario.id,
                     'nombre_usuario': nombre_usuario
@@ -168,12 +175,10 @@ def lista_usuario(request):
 
 
 
-
 def agregar_usuario(request):
     if not request.session.get('es_admin'):
         return redirect('login')
 
-    # Extrae todos los correos actuales
     correos_existentes = list(Usuario.objects.values_list('correoUsuario', flat=True))
 
     if request.method == 'POST':
@@ -181,6 +186,7 @@ def agregar_usuario(request):
         nombre = request.POST.get('nombre')
         telefono = request.POST.get('telefono', '')
         direccion = request.POST.get('direccion', '')
+        foto = request.FILES.get('fotoPerfil') 
 
         if correo in correos_existentes:
             messages.error(request, 'Ya existe un usuario con ese correo.')
@@ -197,7 +203,8 @@ def agregar_usuario(request):
             correoUsuario=correo,
             telefonoUsuario=telefono,
             direccionUsuario=direccion,
-            passwordUsuario=""
+            passwordUsuario="",
+            fotoPerfil=foto
         )
         messages.success(request, 'Usuario registrado correctamente.')
         return redirect('lista_usuario')
@@ -223,6 +230,13 @@ def editar_usuario(request, usuario_id):
         direccion = request.POST.get('direccion', '')
         password = request.POST.get('password')
         eliminar = request.POST.get('eliminar_password')
+        nueva_foto = request.FILES.get('fotoPerfil')
+
+        if nueva_foto:
+            if usuario.fotoPerfil and default_storage.exists(usuario.fotoPerfil.name):
+                default_storage.delete(usuario.fotoPerfil.name)
+
+            usuario.fotoPerfil = nueva_foto
 
         if Usuario.objects.filter(correoUsuario=correo).exclude(id=usuario_id).exists():
             messages.error(request, 'Ya existe un usuario con ese correo.')
