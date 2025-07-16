@@ -32,8 +32,8 @@ urlpatterns = [
     path('consumoHistorico/', include('Aplicaciones.ConsumoHistorico.urls')),
     path('consumoDinamico/', include('Aplicaciones.consumoDinamico.urls')),
     path('logsUsuario/', include('Aplicaciones.LogsUsuario.urls')),
-    path('tipoMensaje/', include('Aplicaciones.TipoMensaje.urls')),
     
+
 
 
 ]
