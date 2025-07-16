@@ -6,6 +6,9 @@ from django.utils.timezone import localtime
 from Aplicaciones.ConsumoHistorico.models import ConsumoHistorico
 from Aplicaciones.UsuarioSensor.models import UsuarioSensor
 from django.contrib import messages
+from Aplicaciones.TipoMensaje.models import TipoMensaje
+from django.views.decorators.csrf import csrf_exempt
+import json
 
 
 def ver_notificaciones_por_usuario(request, id):
@@ -18,6 +21,60 @@ def ver_notificaciones_por_usuario(request, id):
         'sensores': sensores,
         'usuario_id': usuario_id
     })
+
+@csrf_exempt
+def recibir_datos(request):
+    if request.method == 'POST':
+        try:
+            data = json.loads(request.body)
+            sensor_id = data.get('sensor_id')
+            consumo = data.get('consumoLitro')
+
+            # Busca el usuarioSensor relacionado al sensor_id
+            usuario_sensor = UsuarioSensor.objects.filter(sensor__sensorID=sensor_id).first()
+            if not usuario_sensor:
+                return JsonResponse({'error': 'Sensor no encontrado'}, status=404)
+
+            # Busca el tipo de mensaje (ajusta el filtro según tu lógica)
+            tipo_mensaje = TipoMensaje.objects.filter(tipoAlerta='Consumo').first()
+            if not tipo_mensaje:
+                tipo_mensaje = TipoMensaje.objects.first()  # fallback
+
+            # Crea la notificación
+            mensaje = f"Consumo reportado: {consumo} litros"
+            Notificacion.objects.create(
+                mensaje=mensaje,
+                usuarioSensor=usuario_sensor,
+                tipoMensaje=tipo_mensaje,
+                fechaEnvio=timezone.now()
+            )
+
+            return JsonResponse({'status': 'ok', 'mensaje': mensaje})
+        except Exception as e:
+            return JsonResponse({'error': str(e)}, status=400)
+    return JsonResponse({'error': 'Método no permitido'}, status=405)
+
+
+def eliminar_notificacion(request, id):
+    notificaciones = Notificacion.objects.filter(id=id)
+    if not notificaciones.exists():
+        messages.error(request, 'Notificación no encontrada.')
+        return redirect('lista_notificaciones')
+    notificacion = notificaciones.first()
+    notificacion.delete()
+    messages.success(request, 'Notificación eliminada correctamente.')
+    return redirect('lista_notificaciones')
+
+
+def editar_notificacion(request, id):
+    notificacion = get_object_or_404(Notificacion, id=id)
+    if request.method == 'POST':
+        notificacion.mensaje = request.POST.get('mensaje')
+        notificacion.estado = 'estado' in request.POST
+        notificacion.save()
+        messages.success(request, 'Notificación actualizada correctamente.')
+        return redirect('lista_notificaciones')
+    return render(request, 'admin/editar_notificacion.html', {'notificacion': notificacion})
 
 
 
@@ -178,15 +235,7 @@ def reporte_consumo_pie(request, sensor_id):
 
 
 
-def eliminar_notificacion(request, id):
-    notificaciones = Notificacion.objects.filter(id=id)
-    if not notificaciones.exists():
-        messages.error(request, 'Notificación no encontrada.')
-        return redirect('panel_admin')
-    notificacion = notificaciones.first()
-    notificacion.delete()
-    messages.success(request, 'Notificación eliminada correctamente.')
-    return redirect('panel_admin')
+
 
 
 

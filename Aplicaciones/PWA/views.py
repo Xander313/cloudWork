@@ -33,3 +33,9 @@ def lista_consumo_dinamico(request):
     return render(request, 'admin/consumo_dinamico.html', {
         'consumos_dinamicos': consumos_dinamicos
     })
+
+def lista_notificaciones(request):
+    notificaciones = Notificacion.objects.all()
+    return render(request, 'admin/notificaciones.html', {
+        'notificaciones': notificaciones
+    })

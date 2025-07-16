@@ -35,6 +35,9 @@ urlpatterns = [
     path('consumo-dinamico-hoy', views.consumo_dinamico_hoy, name="consumo-dinamico-hoy"),
 
 
+    path('editar_notificacion/<int:id>/', views.editar_notificacion, name='editar_notificacion'),
+
+
 
 
 
