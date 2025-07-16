@@ -1,0 +1,27 @@
+{% extends 'layouts/masteradmin.html' %}
+{% load static %}
+{% block content %}
+<div class="container py-4 d-flex justify-content-center align-items-center" style="min-height: 80vh;">
+    <div class="w-100" style="max-width: 400px;">
+        <div class="card shadow-sm">
+            <div class="card-header bg-success text-white text-center">
+                <h2 class="mb-0 py-2"><i class="fa-solid fa-pen-to-square"></i> Editar Consumo Estático</h2>
+            </div>
+            <div class="card-body px-4 py-4">
+                <form method="post">
+                    {% csrf_token %}
+                    <div class="mb-3">
+                        <label for="consumoEstatico" class="form-label">Consumo (L):</label>
+                        <input type="number" step="0.01" name="consumoEstatico" id="consumoEstatico" class="form-control" value="{{ consumo.consumoEstatico }}" required>
+                    </div>
+                    <div class="d-grid">
+                        <button type="submit" class="btn btn-success">
+                            <i class="fa-solid fa-save"></i> Guardar Cambios
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

@@ -20,21 +20,11 @@ def cerrar_sesion(request):
     return redirect('login')  # Redirige a donde desees
 
 
-# crear funcion para mostrar datos de todos los modelos
-def panel_admi(request):
-    notificaciones = Notificacion.objects.select_related('usuarioSensor__usuario', 'usuarioSensor__sensor', 'tipoMensaje').order_by('-fechaEnvio')
-    consumos_estaticos = ConsumoEstatico.objects.all()
-    consumos_historicos = ConsumoHistorico.objects.all()
-    consumos_dinamicos = ConsumoDinamico.objects.all()
-    logs_usuario = LogUsuario.objects.all()
-    tipos_mensajes = TipoMensaje.objects.all()
 
-    return render(request, 'admin/paneladmin.html', {
-        'notificaciones': notificaciones,
-        'consumos_estaticos': consumos_estaticos,
-        'consumos_historicos': consumos_historicos,
-        'consumos_dinamicos': consumos_dinamicos,
-        'logs_usuario': logs_usuario,
-        'tipos_mensajes': tipos_mensajes,
+
+def lista_consumo_estatico(request):
+    consumos_estaticos = ConsumoEstatico.objects.all()
+    return render(request, 'admin/consumo_estatico.html', {
+        'consumos_estaticos': consumos_estaticos
     })
 

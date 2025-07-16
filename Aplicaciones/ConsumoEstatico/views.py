@@ -13,7 +13,7 @@ def editar_consumo_estatico(request, id):
             consumo.consumoEstatico = float(request.POST.get('consumoEstatico'))
             consumo.save()
             messages.success(request, 'Consumo estático actualizado correctamente.')
-            return redirect('panel_admin')
+            return redirect('lista_consumo_estatico')
         except Exception as e:
             messages.error(request, 'Error al actualizar: ' + str(e))
     return render(request, 'admin/editar_consumo_estatico.html', {'consumo': consumo})
