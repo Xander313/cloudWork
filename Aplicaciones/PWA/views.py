@@ -11,6 +11,7 @@ from Aplicaciones.LimiteUsuario.models import LimiteUsuario
 from Aplicaciones.LogsUsuario.models import LogUsuario
 from Aplicaciones.TipoMensaje.models import TipoMensaje
 
+
 # Create your views here.
 def IniciarSesion(request):
     return render(request, 'iniciarSesion/login.html')
@@ -19,3 +20,13 @@ def cerrar_sesion(request):
     # Lógica para cerrar sesión
     logout(request)  # Asegúrate de importar logout desde django.contrib.auth
     return redirect('login')  # Redirige a donde desees
+
+
+# crear funcion para mostrar datos de todos los modelos
+def panel_admi(request):
+    usuarios = Usuario.objects.all()
+
+    return render(request, 'admin/paneladmin.html', {
+        'usuarios': usuarios,
+    })
+
