@@ -28,3 +28,8 @@ def lista_consumo_estatico(request):
         'consumos_estaticos': consumos_estaticos
     })
 
+def lista_consumo_dinamico(request):
+    consumos_dinamicos = ConsumoDinamico.objects.all()
+    return render(request, 'admin/consumo_dinamico.html', {
+        'consumos_dinamicos': consumos_dinamicos
+    })

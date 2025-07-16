@@ -43,7 +43,7 @@
       <div class="collapse {% if admin_active %}show{% endif %}" id="adminDropdown">
           <ul class="nav">
               <li><a href="{% url 'lista_consumo_estatico' %}"><span class="sidebar-mini-icon">L</span>Consumos Estáticos</a></li>
-              <li><a href=""><span class="sidebar-mini-icon">R</span>Consumos Dinámicos</a></li>
+              <li><a href="{% url 'lista_consumo_dinamico' %}"><span class="sidebar-mini-icon">R</span>Consumos Dinámicos</a></li>
               <li><a href=""><span class="sidebar-mini-icon">R</span>Notificaciones</a></li>
               <li><a href=""><span class="sidebar-mini-icon">R</span>Tipo de Notificaciones</a></li>
               <li><a href=""><span class="sidebar-mini-icon">R</span>Log del usuarios</a></li>

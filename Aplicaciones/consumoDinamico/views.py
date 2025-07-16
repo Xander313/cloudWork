@@ -13,7 +13,7 @@ def editar_consumo_dinamico(request, id):
             consumo.consumoDinamico = float(request.POST.get('consumoDinamico'))
             consumo.save()
             messages.success(request, 'Consumo dinámico actualizado correctamente.')
-            return redirect('panel_admin')
+            return redirect('lista_consumo_dinamico')
         except Exception as e:
             messages.error(request, 'Error al actualizar: ' + str(e))
     return render(request, 'admin/editar_consumo_dinamico.html', {'consumo': consumo})
