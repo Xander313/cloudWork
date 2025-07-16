@@ -29,6 +29,7 @@ def panel_admi(request):
     consumos_historicos = ConsumoHistorico.objects.all()
     consumos_dinamicos = ConsumoDinamico.objects.all()
     logs_usuario = LogUsuario.objects.all()
+    tipos_mensajes = TipoMensaje.objects.all()
 
     return render(request, 'admin/paneladmin.html', {
         'notificaciones': notificaciones,
@@ -36,5 +37,6 @@ def panel_admi(request):
         'consumos_historicos': consumos_historicos,
         'consumos_dinamicos': consumos_dinamicos,
         'logs_usuario': logs_usuario,
+        'tipos_mensajes': tipos_mensajes,
     })
 
