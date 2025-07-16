@@ -39,3 +39,9 @@ def lista_notificaciones(request):
     return render(request, 'admin/notificaciones.html', {
         'notificaciones': notificaciones
     })
+
+def lista_tipo_mensaje(request):
+    tipo_mensajes = TipoMensaje.objects.all()
+    return render(request, 'admin/tipo_mensajes.html', {
+        'tipo_mensajes': tipo_mensajes
+    })
