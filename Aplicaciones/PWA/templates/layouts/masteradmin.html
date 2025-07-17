@@ -61,9 +61,6 @@
 
 
 
-
-
-
     <!-- Bootstrap JS -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
 
@@ -109,12 +106,6 @@
 
 
 
-
-
-    
-
-
-
     <!-- CDNS FUNDAMENTALES -->
 
 
@@ -135,11 +126,48 @@
         <div class="sidebar bg-dark">
     <div class="sidebar-header p-3">
         <a href="" class="navbar-brand p-0 text-white">
-            <h1 class="m-0"><i class="fa-solid fa-chart-line me-2"></i>Admin<span class="fs-5">Panel</span></h1>
+            <h1 class="m-0">A² 💧<span class="fs-5"> AquAler</span></h1>
         </a>
     </div>
     <nav class="sidebar-nav">
         <ul class="nav flex-column">
+
+            <li class="nav-item dropdown {% if admin_active %}active{% endif %}">
+                <a class="nav-link dropdown-toggle" data-bs-toggle="collapse" href="#adminDropdown">
+                    <i class="fa-solid fa-microchip me-2"></i> Administr... Profunda
+                </a>
+                <div class="collapse {% if admin_active %}show{% endif %}" id="adminDropdown">
+                    <ul class="nav flex-column ms-3">
+                        <li class="nav-item">
+                            <a href="{% url 'lista_consumo_estatico' %}" class="nav-link">
+                                <i class="fa-solid fa-bolt me-2"></i> Consumos Estáticos
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="{% url 'lista_consumo_dinamico' %}" class="nav-link">
+                                <i class="fa-solid fa-bolt-lightning me-2"></i> Consumos Dinámicos
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="{% url 'lista_notificaciones' %}" class="nav-link">
+                                <i class="fa-solid fa-bell me-2"></i> Notificaciones
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="" class="nav-link">
+                                <i class="fa-solid fa-bell-concierge me-2"></i> Tipo de Notificaciones
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="" class="nav-link">
+                                <i class="fa-solid fa-clipboard-list me-2"></i> Log del usuario
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+            </li>
+
+
             <li class="nav-item {% if 'icons' in segment %} active {% endif %}">
                 <a href="{% url 'lista_usuario' %}" class="nav-link">
                     <i class="fa-solid fa-users me-2"></i> Usuarios
@@ -176,6 +204,7 @@
                 </div>
             </li>
             
+<<<<<<< HEAD
             <li class="nav-item dropdown {% if admin_active %}active{% endif %}">
                 <a class="nav-link dropdown-toggle" data-bs-toggle="collapse" href="#adminDropdown">
                     <i class="fa-solid fa-microchip me-2"></i> Administración Profunda
@@ -210,6 +239,9 @@
                     </ul>
                 </div>
             </li>
+=======
+
+>>>>>>> c1da79491e577f3e34187e36e58af38a66636941
             
             <div class="sidebar-footer p-3">
                 <a href="https://htmlcodex.com/startup-company-website-template" class="btn btn-primary text-light rounded-pill py-2 px-4 w-100">Cerrar sesion</a>
@@ -264,6 +296,10 @@
 
     <!-- Google Maps -->
     <script async defer src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBNmZyqL59rxQ0aGx_Hj3NrPF6pDY76uhk&libraries=geometry&callback=initMap"></script>
+
+
+    <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBfGs7bFheV6d7HSt1KWV2kVF0pwa8WepM&callback=initMapAvanzado" async defer></script>
+
 
     <script>
         // Toggle sidebar en móviles
@@ -326,7 +362,7 @@
 
     <script>
     $(document).ready(function() {
-        let table = new DataTable('#tabla-asignaciones', {
+        let table = new DataTable('#', {
             language: {
                 url: 'https://cdn.datatables.net/plug-ins/2.3.1/i18n/es-ES.json'
             },

@@ -1,19 +1,20 @@
-
 {% extends 'layouts/masteradmin.html' %}
 {% load static %}
-{% block content %}
 
+
+
+{% block tittle %}
+<div style="display: flex; align-items: center; gap: 10px; margin-bottom: 10px;">
+    <h2 class="mb-0 py-2"><i class="fa-solid fa-user-pen"></i> Editar Usuario</h2>
+</div>
+{% endblock %}
+
+{% block content %}
 <div class="content">
 <div class="container py-4 d-flex justify-content-center align-items-center" style="min-height: 80vh;">
-    <div class="w-100" style="max-width: 400px;">
+    <div class="w-100" style="max-width: 600px;">
         <div class="card shadow-sm">
-            <div class="card-header bg-primary text-white text-center">
-                <h2 class="mb-0 py-2"><i class="fa-solid fa-user-pen"></i> Editar Usuario</h2>
-            </div>
             <div class="card-body px-4 py-4">
-
-
-
                 <form method="post" enctype="multipart/form-data">
                     {% csrf_token %}
                     <div class="mb-4">

@@ -1,12 +1,14 @@
 {% extends 'layouts/masteradmin.html' %}
 {% load static %}
+
+
+
+{% block tittle %}
+<h1>Creación de nueva asignación</h1>
+{% endblock %}
+
+
 {% block content %}
-
-
-
-
-<div class="content">
-    <h1>Creación de nueva asignación</h1>
 
     <form method="POST" action="{% url 'nuevoAsignacion' %}">
         {% csrf_token %}
@@ -62,7 +64,7 @@
             </button>
         </div>
     </form>
-</div>
+
 
 <script>
 $(document).ready(function () {
