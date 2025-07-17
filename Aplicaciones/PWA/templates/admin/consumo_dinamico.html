@@ -24,9 +24,7 @@
                     <th>UsuarioSensor</th>
                     <th>Acciones</th>
                 </tr>
-                <tr>
-                    
-                </tr>
+                
             </thead>
             <tbody>
                 {% for c in consumos_dinamicos %}
@@ -65,22 +63,23 @@
 </div>
 
 
-    <script>
-    $(document).ready(function() {
-        let table = new DataTable('#tabla-dinamico', {
-            language: {
-                url: 'https://cdn.datatables.net/plug-ins/2.3.1/i18n/es-ES.json'
-            },
+<script>
+$(document).ready(function() {
+        $('#tabla-dinamico').DataTable({
+            responsive: true,
             dom: 'Bfrtip',
             buttons: [
-                'copy',
-                'csv',
-                'excel',
-                'pdf',
-                'print'
-            ]
+                { extend: 'copy', text: '<i class="fa fa-copy"></i> Copiar' },
+                { extend: 'csv', text: '<i class="fa fa-file-csv"></i> CSV' },
+                { extend: 'excel', text: '<i class="fa fa-file-excel"></i> Excel' },
+                { extend: 'pdf', text: '<i class="fa fa-file-pdf"></i> PDF' },
+                { extend: 'print', text: '<i class="fa fa-print"></i> Imprimir' }
+            ],
+            language: {
+                url: 'https://cdn.datatables.net/plug-ins/1.13.7/i18n/es-ES.json'
+            }
         });
     });
-    </script>
+</script>
 
 {% endblock %}
