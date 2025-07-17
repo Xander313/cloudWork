@@ -48,11 +48,7 @@ def lista_tipo_mensaje(request):
 
 
 def ver_logs_usuario(request):
-    usuario_id = request.session.get('usuario_id')
-    if not usuario_id:
-        return redirect('login')
-
-    logs = LogUsuario.objects.filter(usuario_id=usuario_id).order_by('-fechaCambio')
+    logs = LogUsuario.objects.all().order_by('-fechaCambio')
 
     return render(request, 'admin/log_usuario.html', {
         'logs': logs

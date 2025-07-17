@@ -134,7 +134,7 @@
 
             <li class="nav-item dropdown {% if admin_active %}active{% endif %}">
                 <a class="nav-link dropdown-toggle" data-bs-toggle="collapse" href="#adminDropdown">
-                    <i class="fa-solid fa-microchip me-2"></i> Administr... Profunda
+                    <i class="fa-solid fa-microchip me-2"></i> Administracion Profunda
                 </a>
                 <div class="collapse {% if admin_active %}show{% endif %}" id="adminDropdown">
                     <ul class="nav flex-column ms-3">
@@ -154,12 +154,12 @@
                             </a>
                         </li>
                         <li class="nav-item">
-                            <a href="" class="nav-link">
+                            <a href="{% url 'lista_tipo_mensaje' %}" class="nav-link">
                                 <i class="fa-solid fa-bell-concierge me-2"></i> Tipo de Notificaciones
                             </a>
                         </li>
                         <li class="nav-item">
-                            <a href="" class="nav-link">
+                            <a href="{% url 'ver_logs_usuario' %}" class="nav-link">
                                 <i class="fa-solid fa-clipboard-list me-2"></i> Log del usuario
                             </a>
                         </li>
@@ -204,44 +204,6 @@
                 </div>
             </li>
             
-<<<<<<< HEAD
-            <li class="nav-item dropdown {% if admin_active %}active{% endif %}">
-                <a class="nav-link dropdown-toggle" data-bs-toggle="collapse" href="#adminDropdown">
-                    <i class="fa-solid fa-microchip me-2"></i> Administración Profunda
-                </a>
-                <div class="collapse {% if admin_active %}show{% endif %}" id="adminDropdown">
-                    <ul class="nav flex-column ms-3">
-                        <li class="nav-item">
-                            <a href="{% url 'lista_consumo_estatico' %}" class="nav-link">
-                                <i class="fa-solid fa-bolt me-2"></i> Consumos Estáticos
-                            </a>
-                        </li>
-                        <li class="nav-item">
-                            <a href="{% url 'lista_consumo_dinamico' %}" class="nav-link">
-                                <i class="fa-solid fa-bolt-lightning me-2"></i> Consumos Dinámicos
-                            </a>
-                        </li>
-                        <li class="nav-item">
-                            <a href="{% url 'lista_notificaciones' %}" class="nav-link">
-                                <i class="fa-solid fa-bell me-2"></i> Notificaciones
-                            </a>
-                        </li>
-                        <li class="nav-item">
-                            <a href="{% url 'lista_tipo_mensaje' %}" class="nav-link">
-                                <i class="fa-solid fa-bell-concierge me-2"></i> Tipo de Notificaciones
-                            </a>
-                        </li>
-                        <li class="nav-item">
-                            <a href="{% url 'ver_logs_usuario' %}" class="nav-link">
-                                <i class="fa-solid fa-clipboard-list me-2"></i> Log del usuario
-                            </a>
-                        </li>
-                    </ul>
-                </div>
-            </li>
-=======
-
->>>>>>> c1da79491e577f3e34187e36e58af38a66636941
             
             <div class="sidebar-footer p-3">
                 <a href="https://htmlcodex.com/startup-company-website-template" class="btn btn-primary text-light rounded-pill py-2 px-4 w-100">Cerrar sesion</a>

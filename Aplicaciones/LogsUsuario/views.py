@@ -1,6 +1,8 @@
 from django.shortcuts import render, redirect
 from .models import LogUsuario
 from django.contrib import messages
+from django.shortcuts import get_object_or_404
+from django.utils.dateparse import parse_datetime
 
 def eliminar_log_usuario(request, id):
     logs = LogUsuario.objects.filter(id=id)
@@ -13,19 +15,26 @@ def eliminar_log_usuario(request, id):
     return redirect('ver_logs_usuario')
 
 def editar_log_usuario(request, id):
-    log = LogUsuario.objects.filter(id=id).first()
-    if not log:
-        messages.error(request, 'Log de usuario no encontrado.')
-        return redirect('ver_logs_usuario')
+    log = get_object_or_404(LogUsuario, id=id)
 
     if request.method == 'POST':
-        try:
-            log.evento = request.POST.get('evento')
-            log.usuario = request.POST.get('usuario')
+        # Obtenemos los datos enviados
+        fecha_cambio_str = request.POST.get('fechaCambio')
+        evento = request.POST.get('evento')
+        descripcion = request.POST.get('descripcion')
+
+        # Parsear la fecha de tipo string a datetime
+        fecha_cambio = parse_datetime(fecha_cambio_str)
+
+        if fecha_cambio is None:
+            messages.error(request, 'Formato de fecha/hora inválido.')
+        else:
+            # Actualizamos el registro
+            log.fechaCambio = fecha_cambio
+            log.evento = evento
+            log.descripcion = descripcion
             log.save()
-            messages.success(request, 'Log de usuario actualizado correctamente.')
-            return redirect('ver_logs_usuario')
-        except Exception as e:
-            messages.error(request, f'Error al actualizar: {e}')
-    
+            messages.success(request, 'Log actualizado correctamente.')
+            return redirect('ver_logs_usuario')  # O la url que corresponda
+
     return render(request, 'admin/editar_log_usuario.html', {'log': log})
