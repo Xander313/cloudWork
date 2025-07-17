@@ -10,10 +10,7 @@
 {% endblock %}
 
 {% block content %}
-<div class="content">
-    <div class="d-flex justify-content-between align-items-center mb-3 mt-5">
-        <p class="mb-0">Total registros: {{ consumos_dinamicos|length }}</p>
-    </div>
+
     <div class="table-responsive">
         <table id="tabla-dinamico" class="table table-striped table-bordered align-middle">
             <thead class="table table-dark">
@@ -60,8 +57,11 @@
             </tbody>
         </table>
     </div>
-</div>
 
+<!-- Carga jQuery y DataTables con Buttons desde CDN -->
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<link rel="stylesheet" href="https://cdn.datatables.net/1.13.7/css/jquery.dataTables.min.css">
+<script src="https://cdn.datatables.net/1.13.7/js/jquery.dataTables.min.js"></script>
 
 <script>
 $(document).ready(function() {
