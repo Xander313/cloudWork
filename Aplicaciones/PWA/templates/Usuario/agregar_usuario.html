@@ -1,14 +1,21 @@
 {% extends 'layouts/masteradmin.html' %}
 {% load static %}
+
+
+
+{% block tittle %}
+
+<h2 class="mb-0 py-2"><i class="fa-solid fa-user-plus"></i> Registrar Usuario</h2>
+
+{% endblock %}
+
 {% block content %}
 
 <div class="content" style="color: black !important;">
     <div class="container py-4 d-flex justify-content-center align-items-center" style="min-height: 90vh;">
-        <div class="w-100" style="max-width: 400px;">
+        <div class="w-100" style="max-width: 600px;">
             <div class="card shadow-sm">
-                <div class="card-header bg-primary text-white text-center">
-                    <h2 class="mb-0 py-2"><i class="fa-solid fa-user-plus"></i> Registrar Usuario</h2>
-                </div>
+
                 <div class="card-body px-4 py-4">
                     <form method="post" action="{% url 'agregar_usuario' %}" enctype="multipart/form-data">
                         {% csrf_token %}

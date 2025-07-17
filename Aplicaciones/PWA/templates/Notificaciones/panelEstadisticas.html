@@ -1,8 +1,16 @@
 {% extends 'layouts/masteradmin.html' %}
 {% load static %}
+
+
+
+{% block tittle %}
+<div style="display: flex; align-items: center; gap: 10px; margin-bottom: 10px;">
+  <h1 style="font-family: Montserrat;">Estadísticas Históricas</h1>
+</div>
+{% endblock %}
+
 {% block content %}
 
-<div class="content">
 
 <style>
     body { 
@@ -17,27 +25,25 @@
 
     }
 
-
 </style>
 
 
-<h1 style="font-family: Montserrat;">Estadísticas Históricas</h1>
 <div class="elemntosestadisticashistoricas">
-<p><em>Determine el período:</em></p>
-<div style="margin-bottom: 20px;">
-    <label>📆 Fecha inicio:</label>
-    <input type="date" id="fechaInicio" onchange="actualizarMapa()">
-    <label>📆 Fecha fin:</label>
-    <input type="date" id="fechaFin" onchange="actualizarMapa()">
-    <p class="errorEnRangoDeFecha"></p>
-</div>
+  <p><em>Determine el período:</em></p>
+  <div style="margin-bottom: 20px;">
+      <label>📆 Fecha inicio:</label>
+      <input type="date" id="fechaInicio" onchange="actualizarMapa()">
+      <label>📆 Fecha fin:</label>
+      <input type="date" id="fechaFin" onchange="actualizarMapa()">
+      <p class="errorEnRangoDeFecha"></p>
+  </div>
 </div>
 
 
 <div id="leyendaMapa" style="
     position: fixed;
-    bottom: 10px;
-    left: 50px;
+    bottom: 70px;
+    left: 30px;
     background: #b3b3b3;
     padding: 10px;
     border-radius: 6px;
@@ -54,7 +60,7 @@
 <div id="mapaEstadistico" style="height: 600px;"></div>
 
 
-</div>
+
 <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
 <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
 

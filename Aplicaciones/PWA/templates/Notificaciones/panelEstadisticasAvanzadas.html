@@ -1,6 +1,19 @@
 {% extends 'layouts/masteradmin.html' %}
 {% load static %}
+
+
+
+{% block tittle %}
+<div style="display: flex; align-items: center; gap: 10px; margin-bottom: 10px;">
+  <h1 style="font-family: Montserrat; margin: 0;">Estadísticas Diarias:</h1>
+  <p id="fechaActual" style="margin: 0; font-size: 1.5rem; line-height: 1;">📅</p>
+</div>
+{% endblock %}
+
+
 {% block content %}
+
+
 
 <div class="content">
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
@@ -12,10 +25,7 @@
 <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 
-<div style="display: flex; align-items: center; gap: 10px; margin-bottom: 10px;">
-  <h1 style="font-family: Montserrat; margin: 0;">Estadísticas Diarias:</h1>
-  <p id="fechaActual" style="margin: 0; font-size: 1.5rem; line-height: 1;">📅</p>
-</div>
+
 
 <div id="mapaAvanzado" style="height: 600px;"></div>
 
@@ -46,7 +56,7 @@
 
 
 <script>
-function initMapaAvanzado() {
+function initMapAvanzado() {
   const mapa = new google.maps.Map(document.getElementById("mapaAvanzado"), {
     center: { lat: -0.7415954958310084, lng: -78.64123031371885 },
     zoom: 14.5,

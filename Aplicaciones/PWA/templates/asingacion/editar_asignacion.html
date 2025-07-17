@@ -1,16 +1,18 @@
 {% extends 'layouts/masteradmin.html' %}
 {% load static %}
+
+
+
+
+{% block tittle %}
+<h1>Editar asignación de sensor</h1>
+{% endblock %}
+
 {% block content %}
-
-<div class="content">
-
-
 
 
 
 <div class="divPrincipal" style="background:white; margin:auto auto; padding:20px; width:60%; border-radius:10px;">
-    <h3>Editar asignación de sensor</h3>
-
     <form method="POST" action="{% url 'editar_asignacion' asignacion.id %}">
         {% csrf_token %}
 
@@ -43,5 +45,5 @@
     </form>
 </div>
 
-</div>
+
 {% endblock  %}
