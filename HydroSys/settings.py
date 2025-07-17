@@ -137,6 +137,7 @@ USE_TZ = True
 
 
 
+USE_L10N = True
 
 MEDIA_URL = '/media/'
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media/')
@@ -145,7 +146,6 @@ MEDIA_ROOT = os.path.join(BASE_DIR, 'media/')
 STATIC_URL = 'static/'
 
 
-USE_L10N = True
 
 STATICFILES_DIRS = [
     os.path.join(BASE_DIR, 'Aplicaciones', 'PWA', 'static'),  # si tienes assets globales
