@@ -77,6 +77,14 @@ def establecer_password(request):
             usuario = Usuario.objects.get(id=usuario_id)
             usuario.passwordUsuario = make_password(nueva_pass)
             usuario.save()
+
+            # ✅ Registrar en el log
+            LogUsuario.objects.create(
+                evento='Inicio de sesión',
+                descripcion=f'El usuario {usuario.nombreUsuario} configuró su contraseña e inició sesión.',
+                usuario=usuario
+            )
+
             messages.success(request, 'Contraseña configurada correctamente.')
             request.session['usuario_id'] = usuario.id
             return render(request, 'Usuario/menucentral.html', {
@@ -86,6 +94,7 @@ def establecer_password(request):
         except Usuario.DoesNotExist:
             messages.error(request, 'Error al configurar contraseña.')
             return redirect('login')
+
 
 
 

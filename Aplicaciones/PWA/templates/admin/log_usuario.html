@@ -17,8 +17,12 @@
                     <th>Fecha</th>
                     <th>Evento</th>
                     <th>Descripción</th>
-                    <th>Fecha</th>
                     <th>Acciones</th>
+                </tr>
+                <tr>
+                    <th>
+
+                    </th>
                 </tr>
             </thead>
             <tbody>
@@ -28,7 +32,6 @@
                     <td>{{ log.fechaCambio|date:"Y-m-d H:i" }}</td>
                     <td>{{ log.evento }}</td>
                     <td>{{ log.descripcion }}</td>
-                    <td>{{ log.fecha|date:"Y-m-d H:i" }}</td>
                     <td>
                         <a href="{% url 'editar_log_usuario' log.id %}" 
                            class="btn btn-primary btn-sm mb-1">
