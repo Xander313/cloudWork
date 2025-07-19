@@ -11,7 +11,11 @@
                 <form method="post">
                     {% csrf_token %}
                     <div class="mb-3">
-                        <label for="consumoEstatico" class="form-label">Consumo (L):</label>
+                        <label for="usuarioSensorInfo" class="form-label">Usuario - Medidor:</label>
+                        <input type="text" class="form-control" id="usuarioSensorInfo" value="{{ consumo.usuarioSensor.usuario.nombreUsuario }} - #{{ consumo.usuarioSensor.sensor.sensorID }}" readonly>
+                    </div>
+                    <div class="mb-3">
+                        <label for="consumoEstatico" class="form-label">Lectora al inicio de mes (L):</label>
                         <input type="number" step="0.01" name="consumoEstatico" id="consumoEstatico" class="form-control" value="{{ consumo.consumoEstatico }}" required>
                     </div>
                     <div class="d-grid">

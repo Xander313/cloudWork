@@ -29,6 +29,7 @@ ZONA_VALIDA = Polygon([
 
 def lista_sensor(request):
     if not request.session.get('es_admin'):
+        messages.error(request, 'Ruta protegida, primero debe iniciar sesión.')
         return redirect('login') 
 
     sensores = Sensor.objects.all() 
@@ -42,6 +43,9 @@ def lista_sensor(request):
 
 
 def agregar_sensor(request):
+    if not request.session.get('es_admin'):
+        messages.error(request, 'Ruta protegida, primero debe iniciar sesión.')
+        return redirect('login') 
     sensores_existentes = Sensor.objects.values_list('sensorID', flat=True)
 
     if request.method == 'POST':
@@ -88,6 +92,9 @@ def agregar_sensor(request):
 
 
 def editar_sensor(request, sensorID):
+    if not request.session.get('es_admin'):
+        messages.error(request, 'Ruta protegida, primero debe iniciar sesión.')
+        return redirect('login') 
     try:
         sensor = Sensor.objects.get(sensorID=sensorID)
     except Sensor.DoesNotExist:
@@ -121,6 +128,9 @@ def editar_sensor(request, sensorID):
     return render(request, 'sensores/editar_sensor.html', {'sensor': sensor})
 
 def eliminar_sensor(request, sensorID):
+    if not request.session.get('es_admin'):
+        messages.error(request, 'Ruta protegida, primero debe iniciar sesión.')
+        return redirect('login') 
     sensores = Sensor.objects.filter(sensorID=sensorID)
     if not sensores.exists():
         messages.error(request, 'Sensor no encontrado.')

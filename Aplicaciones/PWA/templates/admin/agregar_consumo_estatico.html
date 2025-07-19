@@ -1,0 +1,43 @@
+{% extends 'layouts/masteradmin.html' %}
+{% load static %}
+{% block content %}
+<div class="container py-4 d-flex justify-content-center align-items-center" style="min-height: 80vh;">
+    <div class="w-100" style="max-width: 400px;">
+        <div class="card shadow-sm">
+            <div class="card-header bg-success text-white text-center">
+                <h2 class="mb-0 py-2"><i class="fa-solid fa-pen-to-square"></i> Editar Consumo Estático</h2>
+            </div>
+            <div class="card-body px-4 py-4">
+                <form method="post">
+                    {% csrf_token %}
+
+                    <div class="mb-3">
+                        <label for="usuarioSensor">Usuario - Sensor:</label>
+                        {% if usuariosSensoresDisponibles %}
+                            <select name="usuarioSensor" id="usuarioSensor" class="form-select" required>
+                                <option value="">Seleccione uno</option>
+                                {% for us in usuariosSensoresDisponibles %}
+                                    <option value="{{ us.id }}">
+                                        {{ us.usuario.nombreUsuario }} - {{ us.sensor.nombreSensor }}
+                                    </option>
+                                {% endfor %}
+                            </select>
+                        {% else %}
+                            <input type="text" class="form-control" value="Ninguna asignación disponible para agregar lectura estática." disabled>
+                        {% endif %}
+                    </div>
+
+
+                    <div class="mb-3">
+                        <label for="consumoEstatico">Consumo (L):</label>
+                        <input type="number" step="0.01" name="consumoEstatico" id="consumoEstatico" class="form-control" required>
+                    </div>
+
+                    <button type="submit" class="btn btn-success">Guardar</button>
+                </form>
+
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

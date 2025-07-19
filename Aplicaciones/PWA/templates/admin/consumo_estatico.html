@@ -12,6 +12,7 @@
 {% block content %}
 <div class="content">
     <div class="d-flex justify-content-between align-items-center mb-3 mt-5">
+        <a href="{% url 'agregar_consumo_estatico' %}">AGREGAR</a>
         <p class="mb-0">Total registros: {{ consumos_estaticos|length }}</p>
     </div>
 
@@ -21,8 +22,8 @@
                 <tr>
                     <th>ID</th>
                     <th>Consumo&nbsp;(L)</th>
-                    <th>Fecha&nbsp;Corte</th>
-                    <th>UsuarioSensor</th>
+                    <th>Fecha Asignación</th>
+                    <th>Usuario - Medidor</th>
                     <th>Acciones</th>
                 </tr>
                 
