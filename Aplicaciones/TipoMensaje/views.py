@@ -2,6 +2,26 @@ from django.shortcuts import render, get_object_or_404, redirect
 from django.contrib import messages
 from .models import TipoMensaje
 
+#agragar tipomensjae
+def agregar_tipo_mensaje(request):
+    if request.method == 'POST':
+        try:
+            tipo_alerta = request.POST.get('tipoAlerta')
+            mensaje_default = request.POST.get('mensaje_default')
+            
+            TipoMensaje.objects.create(
+                tipoAlerta=tipo_alerta,
+                mensaje_default=mensaje_default
+            )
+            
+            messages.success(request, 'Tipo de mensaje creado exitosamente!')
+            return redirect('lista_tipo_mensaje')
+            
+        except Exception as e:
+            messages.error(request, f'Error al crear tipo de mensaje: {str(e)}')
+    
+    return render(request, 'admin/agregar_tipo_mensaje.html')
+
 # Editar TipoMensaje
 def editar_tipo_mensaje(request, id):
     tipo_mensaje = get_object_or_404(TipoMensaje, id=id)

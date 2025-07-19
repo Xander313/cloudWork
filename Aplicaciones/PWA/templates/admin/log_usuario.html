@@ -6,7 +6,11 @@
 <div class="content">
     <div class="d-flex justify-content-between align-items-center mb-3 mt-5">
         <h2 class="mb-3"><i class="fa-solid fa-clock-rotate-left"></i> Historial de inicio de sesión</h2>
-        <p class="mb-0">Total registros: {{ logs|length }}</p>
+        <div>
+            <a href="{% url 'agregar_log_usuario' %}" class="btn btn-success">
+                <i class="fa-solid fa-plus"></i> Agregar Registro
+            </a>
+        </div>
     </div>
 
     <div class="table-responsive">

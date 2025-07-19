@@ -36,6 +36,7 @@ urlpatterns = [
     path('logsUsuario/', include('Aplicaciones.LogsUsuario.urls')),
     path('tipoMensaje/', include('Aplicaciones.TipoMensaje.urls')),
     
+    
 
 
 

@@ -11,6 +11,39 @@ from django.views.decorators.csrf import csrf_exempt
 import json
 
 
+def agregar_notificacion(request):
+    if request.method == 'POST':
+        try:
+            mensaje = request.POST.get('mensaje')
+            usuario_sensor_id = request.POST.get('usuarioSensor')
+            tipo_mensaje_id = request.POST.get('tipoMensaje')
+            estado = 'estado' in request.POST
+            
+            usuario_sensor = UsuarioSensor.objects.get(id=usuario_sensor_id)
+            tipo_mensaje = TipoMensaje.objects.get(id=tipo_mensaje_id)
+            
+            Notificacion.objects.create(
+                mensaje=mensaje,
+                usuarioSensor=usuario_sensor,
+                tipoMensaje=tipo_mensaje,
+                estado=estado
+            )
+            
+            messages.success(request, 'Notificación creada exitosamente!')
+            return redirect('lista_notificaciones')
+            
+        except Exception as e:
+            messages.error(request, f'Error al crear notificación: {str(e)}')
+    
+    usuarios_sensores = UsuarioSensor.objects.select_related('usuario', 'sensor').all()
+    tipos_mensaje = TipoMensaje.objects.all()
+    
+    return render(request, 'admin/agregar_notificaciones.html', {
+        'usuarios_sensores': usuarios_sensores,
+        'tipos_mensaje': tipos_mensaje
+    })
+
+
 def ver_notificaciones_por_usuario(request, id):
     usuario_id = request.session['usuario_id']
     usuario = get_object_or_404(Usuario, pk=id)

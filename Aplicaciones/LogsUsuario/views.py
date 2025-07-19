@@ -4,6 +4,45 @@ from django.contrib import messages
 from django.shortcuts import get_object_or_404
 from django.utils.dateparse import parse_datetime
 
+from Aplicaciones.Usuario.models import Usuario
+
+
+
+def agregar_log_usuario(request):
+    if request.method == 'POST':
+        try:
+            # Obtener datos del formulario
+            fecha_cambio = parse_datetime(request.POST.get('fechaCambio'))
+            evento = request.POST.get('evento')
+            descripcion = request.POST.get('descripcion')
+            usuario_id = request.POST.get('usuario')
+            
+            # Validaciones
+            if not fecha_cambio:
+                messages.error(request, 'Formato de fecha inválido')
+                return redirect('agregar_log_usuario')
+                
+            usuario = Usuario.objects.get(id=usuario_id)
+            
+            # Crear el registro
+            LogUsuario.objects.create(
+                fechaCambio=fecha_cambio,
+                evento=evento,
+                descripcion=descripcion,
+                usuario=usuario
+            )
+            
+            messages.success(request, 'Registro de historial creado exitosamente!')
+            return redirect('ver_logs_usuario')
+            
+        except Exception as e:
+            messages.error(request, f'Error al crear registro: {str(e)}')
+    
+    usuarios = Usuario.objects.all()
+    return render(request, 'admin/agregar_log_usuario.html', {
+        'usuarios': usuarios
+    })
+
 def eliminar_log_usuario(request, id):
     logs = LogUsuario.objects.filter(id=id)
     if not logs.exists():

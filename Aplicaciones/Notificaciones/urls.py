@@ -2,6 +2,10 @@ from django.urls import path
 from . import views 
 
 urlpatterns = [
+
+
+    path('agregar/', views.agregar_notificacion, name='agregar_notificacion'),
+
     path('notificaciones/<int:sensor_id>/', views.obtener_notificaciones_sensor, name='obtener_notificaciones_sensor'),
     
     path('notificacionesTexto/<int:sensor_id>/', views.obtener_notificaciones_sensor_texto, name='obtener_notificaciones_sensor_texto'),
