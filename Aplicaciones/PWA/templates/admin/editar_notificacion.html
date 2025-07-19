@@ -10,7 +10,7 @@
                 <h2 class="mb-0 py-2"><i class="fa-solid fa-pen"></i> Editar Notificación</h2>
             </div>
             <div class="card-body px-4 py-4">
-                <form method="post">
+                <form method="post" id="editar-notificacion">
                     {% csrf_token %}
                     <div class="mb-3">
                         <label for="mensaje" class="form-label">Mensaje:</label>
@@ -32,5 +32,23 @@
         </div>
     </div>
 </div>
+
+
+<script>
+    $("#editar-notificacion").validate({
+        rules: {
+            mensaje: {
+                required: true,
+                minlength: 5
+            }
+        },
+        messages: {
+            mensaje: {
+                required: "Por favor, ingrese un mensaje.",
+                minlength: "El mensaje debe tener al menos 5 caracteres."
+            }
+        }
+    });
+</script>
 
 {% endblock %}

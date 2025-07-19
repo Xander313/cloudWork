@@ -13,7 +13,7 @@
                 <h3 class="mb-0">Registro #{{ log.id }}</h3>
             </div>
             <div class="card-body">
-                <form method="post">
+                <form method="post" id="editar-log">
                     {% csrf_token %}
                     <div class="row mb-3">
                         <div class="col-md-6">
@@ -49,5 +49,35 @@
         </div>
     </div>
 </div>
+
+<script>
+    $("#editar-log").validate({
+        rules: {
+            fechaCambio: {
+                required: true
+                
+            },
+            evento: {
+                required: true
+            },
+            descripcion: {
+                required: true,
+                minlength: 5
+            }
+        },
+        messages: {
+            fechaCambio: {
+                required: "Por favor, ingrese la fecha y hora del cambio.",
+            },
+            evento: {
+                required: "Por favor, seleccione un tipo de evento."
+            },
+            descripcion: {
+                required: "Por favor, ingrese una descripción.",
+                minlength: "La descripción debe tener al menos 5 caracteres."
+            }
+        }
+    });
+</script>
 
 {% endblock %}

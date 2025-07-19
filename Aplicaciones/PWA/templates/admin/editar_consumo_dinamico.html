@@ -10,7 +10,7 @@
                 <h2 class="mb-0 py-2"><i class="fa-solid fa-pen-to-square"></i> Editar Consumo Dinámico</h2>
             </div>
             <div class="card-body px-4 py-4">
-                <form method="post">
+                <form method="post" id="editar-consumo-dinamico">
                     {% csrf_token %}
                     <div class="mb-3">
                         <label for="consumoDinamico" class="form-label">Consumo (L):</label>
@@ -26,4 +26,25 @@
         </div>
     </div>
 </div>
+
+
+<script>
+    $("#editar-consumo-dinamico").validate({
+        rules:{
+            consumoDinamico: {
+                required: true,
+                number: true,
+                min: 0
+            }
+        },
+
+        messages:{
+            consumoDinamico: {
+                required: "Por favor, ingrese el consumo dinámico.",
+                number: "El consumo debe ser un número válido.",
+                min: "El consumo no puede ser negativo."
+            }
+        }
+    });
+</script>
 {% endblock %}

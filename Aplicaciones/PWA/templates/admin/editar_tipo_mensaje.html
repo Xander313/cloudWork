@@ -8,7 +8,7 @@
                 <h2 class="mb-0 py-2"><i class="fa-solid fa-pen-to-square"></i> Editar Tipo de Mensaje</h2>
             </div>
             <div class="card-body px-4 py-4">
-                <form method="post">
+                <form method="post" id="editar-tipo-mensaje">
                     {% csrf_token %}
                     <div class="mb-3">
                         <label for="tipoAlerta" class="form-label">Tipo Alerta:</label>
@@ -28,4 +28,29 @@
         </div>
     </div>
 </div>
+
+<script>
+    $("#editar-tipo-mensaje").validate({
+        rules: {
+            tipoAlerta: {
+                required: true,
+                minlength: 3
+            },
+            mensaje_default: {
+                required: true,
+                minlength: 5
+            }
+        },
+        messages: {
+            tipoAlerta: {
+                required: "Por favor, ingrese el tipo de alerta.",
+                minlength: "El tipo de alerta debe tener al menos 3 caracteres."
+            },
+            mensaje_default: {
+                required: "Por favor, ingrese un mensaje por defecto.",
+                minlength: "El mensaje debe tener al menos 5 caracteres."
+            }
+        }
+    });
+</script>
 {% endblock %}
