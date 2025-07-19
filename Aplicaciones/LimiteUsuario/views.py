@@ -243,7 +243,7 @@ def nuevoAsignacion(request):
             tiempoMinutos=tiempo_minutos
         )
 
-        messages.success(request, f"Medidor con Número #'{sensor_id}' asignado correctamente a {usuario.nombreUsuario}.")
+        messages.success(request, f"✅ Medidor Número #{sensor_id} asignado correctamente a {usuario.nombreUsuario}.")
         return redirect('listaAsignacion')  
 
     return render(request, 'asingacion/crear_asignacion.html', {
