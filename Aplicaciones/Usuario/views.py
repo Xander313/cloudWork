@@ -10,7 +10,7 @@ import random
 from django.db.models import ProtectedError
 from django.core.files.storage import default_storage
 import os
-from Aplicaciones.LogsUsuario.models import LogUsuario  # Ajusta el path real a tu proyecto
+from Aplicaciones.LogsUsuario.models import LogUsuario
 
 
 
@@ -44,8 +44,6 @@ def login_view(request):
                 request.session['usuario_id'] = usuario.id
                 nombre_usuario = usuario.nombreUsuario
 
-
-                # 👇 Registro en LogUsuario con los campos que definiste
                 LogUsuario.objects.create(
                     evento='Inicio de sesión',
                     descripcion=f'El usuario {nombre_usuario} inició sesión correctamente.',
@@ -78,7 +76,6 @@ def establecer_password(request):
             usuario.passwordUsuario = make_password(nueva_pass)
             usuario.save()
 
-            # ✅ Registrar en el log
             LogUsuario.objects.create(
                 evento='Inicio de sesión',
                 descripcion=f'El usuario {usuario.nombreUsuario} configuró su contraseña e inició sesión.',
@@ -200,8 +197,6 @@ def agregar_usuario(request):
         return redirect('login')
 
     correos_existentes = list(Usuario.objects.values_list('correoUsuario', flat=True))
-    telefonos_existentes = list(Usuario.objects.values_list('telefonoUsuario', flat=True))
-
 
     if request.method == 'POST':
         correo = request.POST.get('correo')
@@ -219,17 +214,6 @@ def agregar_usuario(request):
                 'telefono': telefono,
                 'direccion': direccion
             })
-        if telefono in telefonos_existentes and telefono != '':
-            messages.error(request, 'Ya existe un usuario con ese teléfono.')
-            return render(request, 'Usuario/agregar_usuario.html', {
-                'correos': correos_existentes,
-                'telefonos': telefonos_existentes,
-                'correo': correo,
-                'nombre': nombre,
-                'telefono': telefono,
-                'direccion': direccion
-            })
-
 
         Usuario.objects.create(
             nombreUsuario=nombre,
@@ -243,10 +227,8 @@ def agregar_usuario(request):
         return redirect('lista_usuario')
 
     return render(request, 'Usuario/agregar_usuario.html', {
-        'correos': correos_existentes,
-        'telefonos': telefonos_existentes,
+        'correos': correos_existentes
     })
-
 
 
 
@@ -257,9 +239,6 @@ def editar_usuario(request, usuario_id):
     if not request.session.get('es_admin'):
         return redirect('login') 
     usuario = get_object_or_404(Usuario, id=usuario_id)
-
-    correos_existentes = list(Usuario.objects.values_list('correoUsuario', flat=True))
-    telefonos_existentes = list(Usuario.objects.values_list('telefonoUsuario', flat=True))
 
     if request.method == 'POST':
         correo = request.POST.get('correo')
@@ -302,14 +281,7 @@ def editar_usuario(request, usuario_id):
         return redirect('lista_usuario')
 
 
-    return render(request, 'Usuario/editar_usuario.html', {
-        'usuario': usuario,
-        'correos': correos_existentes,
-        'telefonos': telefonos_existentes,
-        'correo_actual': usuario.correoUsuario,
-        'telefono_actual': usuario.telefonoUsuario
-    })
-
+    return render(request, 'Usuario/editar_usuario.html', {'usuario': usuario})
 
 
 def eliminar_usuario(request, usuario_id):

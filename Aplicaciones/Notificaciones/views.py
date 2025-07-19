@@ -1,14 +1,23 @@
 from django.shortcuts import render, get_object_or_404, redirect
 from Aplicaciones.Usuario.models import Usuario
 from django.http import JsonResponse
-from Aplicaciones.Notificaciones.models import Notificacion
-from django.utils.timezone import localtime
-from Aplicaciones.ConsumoHistorico.models import ConsumoHistorico
 from Aplicaciones.UsuarioSensor.models import UsuarioSensor
 from django.contrib import messages
 from Aplicaciones.TipoMensaje.models import TipoMensaje
-from django.views.decorators.csrf import csrf_exempt
 import json
+from datetime import datetime, timedelta, timezone
+from django.utils.timezone import now, localtime
+from django.db.models import Sum
+from django.utils.dateparse import parse_date
+from Aplicaciones.Sensor.models import Sensor
+from Aplicaciones.ConsumoHistorico.models import ConsumoHistorico
+from datetime import datetime, time
+from Aplicaciones.Notificaciones.models import Notificacion
+from Aplicaciones.consumoDinamico.models import ConsumoDinamico
+from Aplicaciones.ConsumoEstatico.models import ConsumoEstatico
+from Aplicaciones.LimiteUsuario.models import LimiteUsuario
+
+
 
 
 def agregar_notificacion(request):
@@ -55,37 +64,37 @@ def ver_notificaciones_por_usuario(request, id):
         'usuario_id': usuario_id
     })
 
-@csrf_exempt
-def recibir_datos(request):
-    if request.method == 'POST':
-        try:
-            data = json.loads(request.body)
-            sensor_id = data.get('sensor_id')
-            consumo = data.get('consumoLitro')
-
-            # Busca el usuarioSensor relacionado al sensor_id
-            usuario_sensor = UsuarioSensor.objects.filter(sensor__sensorID=sensor_id).first()
-            if not usuario_sensor:
-                return JsonResponse({'error': 'Sensor no encontrado'}, status=404)
-
-            # Busca el tipo de mensaje (ajusta el filtro según tu lógica)
-            tipo_mensaje = TipoMensaje.objects.filter(tipoAlerta='Consumo').first()
-            if not tipo_mensaje:
-                tipo_mensaje = TipoMensaje.objects.first()  # fallback
-
-            # Crea la notificación
-            mensaje = f"Consumo reportado: {consumo} litros"
-            Notificacion.objects.create(
-                mensaje=mensaje,
-                usuarioSensor=usuario_sensor,
-                tipoMensaje=tipo_mensaje,
-                fechaEnvio=timezone.now()
-            )
-
-            return JsonResponse({'status': 'ok', 'mensaje': mensaje})
-        except Exception as e:
-            return JsonResponse({'error': str(e)}, status=400)
-    return JsonResponse({'error': 'Método no permitido'}, status=405)
+#@csrf_exempt
+#def recibir_datos(request):
+#    if request.method == 'POST':
+#        try:
+#            data = json.loads(request.body)
+#            sensor_id = data.get('sensor_id')
+#            consumo = data.get('consumoLitro')
+#
+#            # Busca el usuarioSensor relacionado al sensor_id
+#            usuario_sensor = UsuarioSensor.objects.filter(sensor__sensorID=sensor_id).first()
+#            if not usuario_sensor:
+#                return JsonResponse({'error': 'Sensor no encontrado'}, status=404)
+#
+#            # Busca el tipo de mensaje (ajusta el filtro según tu lógica)
+#            tipo_mensaje = TipoMensaje.objects.filter(tipoAlerta='Consumo').first()
+#            if not tipo_mensaje:
+#                tipo_mensaje = TipoMensaje.objects.first()  # fallback
+#
+#            # Crea la notificación
+#            mensaje = f"Consumo reportado: {consumo} litros"
+#            Notificacion.objects.create(
+#                mensaje=mensaje,
+#                usuarioSensor=usuario_sensor,
+#                tipoMensaje=tipo_mensaje,
+#                fechaEnvio=timezone.now()
+#            )
+#
+#            return JsonResponse({'status': 'ok', 'mensaje': mensaje})
+#        except Exception as e:
+#            return JsonResponse({'error': str(e)}, status=400)
+#    return JsonResponse({'error': 'Método no permitido'}, status=405)
 
 
 def eliminar_notificacion(request, id):
@@ -129,15 +138,6 @@ def obtener_notificaciones_sensor_texto(request, sensor_id):
 
 
 
-from django.db.models import Sum
-from django.utils.timezone import now, localtime
-from datetime import datetime, time
-from django.http import JsonResponse
-from Aplicaciones.Notificaciones.models import Notificacion
-from Aplicaciones.consumoDinamico.models import ConsumoDinamico
-from Aplicaciones.ConsumoEstatico.models import ConsumoEstatico
-from Aplicaciones.LimiteUsuario.models import LimiteUsuario
-from Aplicaciones.UsuarioSensor.models import UsuarioSensor
 
 def obtener_notificaciones_sensor(request, sensor_id):
     usuario_sensor = UsuarioSensor.objects.filter(id=sensor_id).first()
@@ -274,14 +274,6 @@ def reporte_consumo_pie(request, sensor_id):
 
 
 
-
-from django.db.models import Sum
-from django.utils.dateparse import parse_date
-from django.http import JsonResponse
-from Aplicaciones.UsuarioSensor.models import UsuarioSensor
-from Aplicaciones.Sensor.models import Sensor
-from Aplicaciones.ConsumoHistorico.models import ConsumoHistorico
-
 def estadisticas_geograficas(request):
     inicio = parse_date(request.GET.get("inicio"))
     fin = parse_date(request.GET.get("fin"))
@@ -337,9 +329,6 @@ def admin_estadisticas_geograficas_avanzadas(request):
 
 
 
-from datetime import datetime, timedelta, timezone
-from django.utils.timezone import now, localtime
-from django.http import JsonResponse
 
 
 
