@@ -123,7 +123,7 @@ def editar_sensor(request, sensorID):
         except (TypeError, ValueError):
             messages.error(request, '❌ Las coordenadas no son válidas.')
 
-        return redirect('panel_admin')
+        return redirect('lista_sensor')
 
     return render(request, 'sensores/editar_sensor.html', {'sensor': sensor})
 

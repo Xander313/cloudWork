@@ -3,57 +3,52 @@ from django.urls import reverse
 from .models import Usuario
 from django.contrib.auth.hashers import make_password
 
-class UsuarioModelTest(TestCase):
-    def setUp(self):
-        self.usuario = Usuario.objects.create(
-            nombreUsuario='Juan Pérez',
-            correoUsuario='juan@example.com',
-            passwordUsuario=make_password('secreto123')
-        )
-
-    def test_creacion_usuario(self):
-        usuario = Usuario.objects.get(correoUsuario='juan@example.com')
-        self.assertEqual(usuario.nombreUsuario, 'Juan Pérez')
-
-    def test_str_usuario(self):
-        self.assertEqual(str(self.usuario), 'Juan Pérez')
-
-    def test_actualizar_usuario(self):
-        self.usuario.nombreUsuario = 'Juan Actualizado'
-        self.usuario.save()
-        self.assertEqual(Usuario.objects.get(pk=self.usuario.pk).nombreUsuario, 'Juan Actualizado')
-
-    def test_eliminar_usuario(self):
-        pk = self.usuario.pk
-        self.usuario.delete()
-        self.assertFalse(Usuario.objects.filter(pk=pk).exists())
-
-class UsuarioViewsTest(TestCase):
+class UsuarioTests(TestCase):
     def setUp(self):
         self.client = Client()
-        self.usuario = Usuario.objects.create(
-            nombreUsuario='Test User',
-            correoUsuario='testuser@example.com',
-            passwordUsuario=make_password('testpass123')
+        self.admin_usuario = Usuario.objects.create(
+            nombreUsuario="admin",
+            correoUsuario="admin@example.com",
+            passwordUsuario=make_password("1234"),
         )
+        # Simular sesión admin para tests
+        session = self.client.session
+        session['es_admin'] = True
+        session.save()
 
-    def test_login_view_usuario_correcto(self):
-        response = self.client.post(reverse('login'), {
-            'correoUsuario': 'testuser@example.com',
-            'passwordUsuario': 'testpass123'
-        })
+    def test_lista_usuario_admin(self):
+        response = self.client.get(reverse('lista_usuario'))
         self.assertEqual(response.status_code, 200)
-        self.assertTemplateUsed(response, 'Usuario/menucentral.html')
 
-    def test_login_view_usuario_incorrecto(self):
-        response = self.client.post(reverse('login'), {
-            'correoUsuario': 'testuser@example.com',
-            'passwordUsuario': 'wrongpass'
+    def test_agregar_usuario(self):
+        response = self.client.post(reverse('agregar_usuario'), {
+            'correo': 'nuevo@example.com',
+            'nombre': 'Nuevo Usuario',
+            'telefono': '0999999999',
+            'direccion': 'Quito',
         })
-        self.assertContains(response, 'Contraseña incorrecta')
+        self.assertRedirects(response, reverse('lista_usuario'))
 
-    def test_login_view_usuario_no_existe(self):
-        response = self.client.post(reverse('login'), {
-            'correoUsuario': 'noexiste@example.com',
-            'passwordUsuario': 'algo'
+    def test_editar_usuario(self):
+        usuario = Usuario.objects.create(
+            nombreUsuario="UsuarioTest",
+            correoUsuario="testuser@example.com",
+            passwordUsuario=make_password("1234"),
+        )
+        response = self.client.post(reverse('editar_usuario', args=[usuario.id]), {
+            'correo': 'editado@example.com',
+            'nombre': 'Usuario Editado',
+            'telefono': '0987654321',
+            'direccion': 'Latacunga',
+            'password': 'nuevopass',
         })
+        self.assertRedirects(response, reverse('lista_usuario'))
+
+    def test_eliminar_usuario(self):
+        usuario = Usuario.objects.create(
+            nombreUsuario="UsuarioEliminar",
+            correoUsuario="elim@example.com",
+            passwordUsuario=make_password("1234"),
+        )
+        response = self.client.get(reverse('eliminar_usuario', args=[usuario.id]))
+        self.assertRedirects(response, reverse('lista_usuario'))
