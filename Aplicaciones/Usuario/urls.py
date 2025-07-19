@@ -3,8 +3,6 @@ from . import views
 
 urlpatterns = [
 
-
-    
     ################ ESTA RUTA ES PARA EL MENU CENTRAL##############
     path('sesionIniciada/', views.menuCentral, name='menuCentral'), 
 
@@ -21,20 +19,7 @@ urlpatterns = [
     path('eliminar_usuario/<int:usuario_id>/', views.eliminar_usuario, name='eliminar_usuario'),
 
 
-
-
-
     path('establecer_password/', views.establecer_password, name='establecer_password'), 
-
-
-
-
-
-
-
-
-
-
 
 
 
