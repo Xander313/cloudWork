@@ -40,7 +40,7 @@ def editar_consumo_dinamico(request, id):
     consumos = ConsumoDinamico.objects.filter(id=id)
     if not consumos.exists():
         messages.error(request, 'Consumo dinámico no encontrado.')
-        return redirect('panel_admin')
+        return redirect('lista_consumo_dinamico')
     consumo = consumos.first()
     if request.method == 'POST':
         try:
@@ -56,8 +56,8 @@ def eliminar_consumo_dinamico(request, id):
     consumos = ConsumoDinamico.objects.filter(id=id)
     if not consumos.exists():
         messages.error(request, 'Consumo dinámico no encontrado.')
-        return redirect('panel_admin')
+        return redirect('lista_consumo_dinamico')
     consumo = consumos.first()
     consumo.delete()
     messages.success(request, 'Consumo dinámico eliminado correctamente.')
-    return redirect('panel_admin')
+    return redirect('lista_consumo_dinamico')
