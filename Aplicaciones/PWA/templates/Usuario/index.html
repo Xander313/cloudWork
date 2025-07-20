@@ -23,7 +23,8 @@
                 <thead class="table-dark">
                     <tr>
                         <th>ID</th>
-                        <th>Foto</th> 
+                        <th>Foto</th>
+                        <th># de cédula</th> 
                         <th>Correo</th>
                         <th>Nombre</th>
                         <th>Teléfono</th>
@@ -41,6 +42,7 @@
                                 <p>sin foto de perfil</p>
                             {% endif %}
                         </td>
+                        <td>{{ usuario.dni }}</td>
                         <td>{{ usuario.correoUsuario }}</td>
                         <td>{{ usuario.nombreUsuario }}</td>
                         <td>{{ usuario.telefonoUsuario }}</td>

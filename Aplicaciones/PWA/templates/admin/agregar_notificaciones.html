@@ -29,11 +29,11 @@
                     <div class="row">
                         <div class="col-md-6 mb-3">
                             <label for="usuarioSensor" class="form-label">Usuario-Sensor *</label>
-                            <select name="usuarioSensor" id="usuarioSensor" class="form-select" required>
+                            <select name="usuarioSensor" id="usuarioSensor" class="form-select selectpicker" data-live-search="true" title="Buscar usuario..." required>
                                 <option value="">Seleccione una opción</option>
                                 {% for us in usuarios_sensores %}
                                 <option value="{{ us.id }}">
-                                    {{ us.usuario.nombreUsuario }} - {{ us.sensor.sensorID }} ({{ us.ubicacionSensor }})
+                                    {{ us.usuario.nombreUsuario }} - {{ us.sensor.sensorID }}
                                 </option>
                                 {% endfor %}
                             </select>
@@ -59,9 +59,9 @@
                         <button type="submit" class="btn btn-success">
                             <i class="fa-solid fa-floppy-disk"></i> Guardar Notificación
                         </button>
-                        <a href="{% url 'lista_notificaciones' %}" class="btn btn-secondary">
-                            <i class="fa-solid fa-arrow-left"></i> Volver al Listado
-                        </button>
+                        <a href="{% url 'lista_notificaciones' %}" class="btn btn-secondary"> 
+                            <i class="fa-solid fa-arrow-left"></i> Volver al Listado 
+                        </a>
                     </div>
                 </form>
             </div>
@@ -113,5 +113,12 @@
     });
 
 </script>
+
+<script>
+    $(document).ready(function () {
+        $('#usuarioSensor').selectpicker();
+    });
+</script>
+
 
 {% endblock %}

@@ -5,6 +5,7 @@ from Aplicaciones.UsuarioSensor.models import UsuarioSensor
 
 
 def agregar_consumo_historico(request):
+
     usuarios_sensores = UsuarioSensor.objects.all()
 
     if request.method == 'POST':
@@ -40,6 +41,9 @@ def agregar_consumo_historico(request):
     })
 
 def editar_consumo_historico(request, id):
+    if not request.session.get('es_admin'):
+        messages.error(request, 'Ruta protegida, primero debe iniciar sesión.')
+        return redirect('login') 
     historicos = ConsumoHistorico.objects.filter(id=id)
     if not historicos.exists():
         messages.error(request, 'Consumo histórico no encontrado.')
@@ -56,9 +60,23 @@ def editar_consumo_historico(request, id):
             return redirect('lista_consumo_historico')
         except Exception as e:
             messages.error(request, 'Error al actualizar: ' + str(e))
-    return render(request, 'admin/editar_consumo_historico.html', {'historico': historico})
+
+    consumoTotal_str = str(historico.consumoTotal).replace(',', '.')
+    maxConsumo_str = str(historico.maxConsumo).replace(',', '.')
+    minConsumo_str = str(historico.minConsumo).replace(',', '.')
+
+    return render(request, 'admin/editar_consumo_historico.html', {
+        'historico': historico,
+        'consumoTotal_str': consumoTotal_str,
+        'maxConsumo_str': maxConsumo_str,
+        'minConsumo_str': minConsumo_str
+    })
+
 
 def eliminar_consumo_historico(request, id):
+    if not request.session.get('es_admin'):
+        messages.error(request, 'Ruta protegida, primero debe iniciar sesión.')
+        return redirect('login') 
     historicos = ConsumoHistorico.objects.filter(id=id)
     if not historicos.exists():
         messages.error(request, 'Consumo histórico no encontrado.')

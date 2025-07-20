@@ -5,6 +5,9 @@ from Aplicaciones.UsuarioSensor.models import UsuarioSensor
 
 
 def agregar_consumo_dinamico(request):
+    if not request.session.get('es_admin'):
+        messages.error(request, 'Ruta protegida, primero debe iniciar sesión.')
+        return redirect('login') 
     if request.method == 'POST':
         try:
             consumo = float(request.POST.get('consumoDinamico'))
@@ -37,6 +40,9 @@ def agregar_consumo_dinamico(request):
     })
 
 def editar_consumo_dinamico(request, id):
+    if not request.session.get('es_admin'):
+        messages.error(request, 'Ruta protegida, primero debe iniciar sesión.')
+        return redirect('login') 
     consumos = ConsumoDinamico.objects.filter(id=id)
     if not consumos.exists():
         messages.error(request, 'Consumo dinámico no encontrado.')
@@ -50,9 +56,13 @@ def editar_consumo_dinamico(request, id):
             return redirect('lista_consumo_dinamico')
         except Exception as e:
             messages.error(request, 'Error al actualizar: ' + str(e))
-    return render(request, 'admin/editar_consumo_dinamico.html', {'consumo': consumo})
+    consumo_str = str(consumo.consumoDinamico).replace(',', '.')
+    return render(request, 'admin/editar_consumo_dinamico.html', {'consumo': consumo_str })
 
 def eliminar_consumo_dinamico(request, id):
+    if not request.session.get('es_admin'):
+        messages.error(request, 'Ruta protegida, primero debe iniciar sesión.')
+        return redirect('login') 
     consumos = ConsumoDinamico.objects.filter(id=id)
     if not consumos.exists():
         messages.error(request, 'Consumo dinámico no encontrado.')

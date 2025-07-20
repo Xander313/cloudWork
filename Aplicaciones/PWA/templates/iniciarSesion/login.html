@@ -1,12 +1,7 @@
 {% extends 'layouts/base.html' %}
 {% load static %}
 {% block content %}
-<!DOCTYPE html>
-<html lang="es">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Sistema de Autenticación</title>
+
     <style>
         body {
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
@@ -23,8 +18,8 @@
             background: white;
             border-radius: 10px;
             box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
-            overflow: hidden;
-            width: 400px;
+            overflow-y: auto;
+            width: 450px;
             position: relative;
             transition: all 0.3s ease;
         }
@@ -159,103 +154,178 @@
 
             .auth-container {
 
-                width: 90%;
+                width: 95%;
 
             }
         }
     </style>
-</head>
-<body>
-    <div class="auth-container">
-        <div id="login-form" class="form-container">
-            <div class="contenidoResponsive fade">
-                <p><em>Patrocinado por:</em></p>
-                <div class="imagenesLogos">
-                    <img src="{% static 'pwa/img/utclogo.avif' %}" alt="Logo UTC">
-                    <img class="tandacato" src="{% static 'pwa/img/tandacato.png' %}" alt="Logo TANDACATO">
-                    <img src="{% static 'pwa/img/si.png' %}" alt="Logo SI">
-                </div>
-                <h1 class="tituloCentralx titleFade">AquAlert 💧 Sistema de Notificación</h1>
-                <br>
-                <br>
-            </div>
-            
 
-            <h2 class="form-title titleFade">Iniciar Sesión</h2>
-            
-            {% if messages %}
-                {% for message in messages %}
-                    <div class="alert alert-{{ message.tags }}">{{ message }}</div>
-                {% endfor %}
-            {% endif %}
-            
-            <form method="post"  class="titleFade" action="{% url 'login' %}" >
-                {% csrf_token %}
-                <div class="form-group">
-                    <label for="correoUsuario">Correo Electrónico</label>
-                    <input type="text" id="correoUsuario" name="correoUsuario" required>
-                </div>
-                <div class="form-group">
-                    <label for="passwordUsuario">Contraseña</label>
-                    <input type="password" id="passwordUsuario" name="passwordUsuario" required>
-                </div>
-                <button type="submit" class="btn">Ingresar</button>
-            </form>
-            <!--
-            <div class="toggle-form">
-                ¿No tienes cuenta? <a onclick="toggleForm('register')">Regístrate aquí</a>
-            </div>-->
+
+
+
+
+
+
+<!-- Contenedor Login -->
+<div class="auth-container fade" id="login-container">
+    <div class="form-container">
+        <div class="contenidoResponsive fade">
+            <p><em>Patrocinado por:</em></p>
+            <div class="imagenesLogos">
+                <img src="{% static 'pwa/img/utclogo.avif' %}" alt="Logo UTC">
+                <img class="tandacato" src="{% static 'pwa/img/tandacato.png' %}" alt="Logo TANDACATO">
+                <img src="{% static 'pwa/img/si.png' %}" alt="Logo SI">
+            </div>
+            <h1 class="tituloCentralx titleFade">AquAlert 💧 Sistema de Notificación</h1>
+            <br><br>
         </div>
         
-        <div id="register-form" class="form-container hidden">
-            <h2 class="form-title">Registro de Usuario</h2>
-            
-            {% if messages %}
-                {% for message in messages %}
-                    <div class="alert alert-{{ message.tags }}">{{ message }}</div>
-                {% endfor %}
-            {% endif %}
-            
-            <form method="post" action="{% url 'registro' %}" id="register-form">
-                {% csrf_token %}
-                <div class="form-group">
-                    <label for="regNombreUsuario">Nombre</label>
-                    <input type="text" id="regNombreUsuario" name="nombreUsuario" required>
-                </div>
-                <div class="form-group">
-                    <label for="regCorreoUsuario">Correo Electrónico</label>
-                    <input type="email" id="regCorreoUsuario" name="correoUsuario" required>
-                </div>
-                <div class="form-group">
-                    <label for="regPasswordUsuario">Contraseña</label>
-                    <input type="password" id="regPasswordUsuario" name="passwordUsuario" minlength="6" required>
-                    <div class="password-hint" style="font-size:12px; color:#666; margin-top:5px;">
-                        Mínimo 6 caracteres
-                    </div>
-                </div>
-                <button type="submit" class="btn">Registrarse</button>
-            </form>
-
-            <div class="toggle-form">
-                ¿Ya tienes cuenta? <a onclick="toggleForm('login')">Inicia sesión aquí</a>
+        <h2 class="form-title titleFade">Iniciar Sesión</h2>
+        
+        {% if messages %}
+            {% for message in messages %}
+                <div class="alert alert-{{ message.tags }}">{{ message }}</div>
+            {% endfor %}
+        {% endif %}
+        
+        <form method="post" class="titleFade" action="{% url 'login' %}">
+            {% csrf_token %}
+            <div class="form-group">
+                <label for="correoUsuario">Correo Electrónico</label>
+                <input type="text" id="correoUsuario" name="correoUsuario" required>
             </div>
-        </div>
-
-        <div id="verify-form" class="form-container hidden">
-            <h2 class="form-title">Verifica tu correo</h2>
-            <div class="alert alert-info">
-                Se ha enviado un código de verificación a tu correo electrónico.
+            <div class="form-group">
+                <label for="passwordUsuario">Contraseña</label>
+                <input type="password" id="passwordUsuario" name="passwordUsuario" required>
             </div>
-            <form method="post" action="{% url 'verify_email' %}">
-                {% csrf_token %}
-                <div class="form-group">
-                    <label for="verification_code">Código de verificación</label>
-                    <input type="text" id="verification_code" name="verification_code" required>
-                </div>
-                <button type="submit" class="btn">Verificar</button>
-            </form>
+            <button type="submit" class="btn">Ingresar</button>
+        </form>
+        
+        <div class="toggle-form">
+            ¿No tienes cuenta? <a onclick="toggleForm('register')">Regístrate aquí</a>
         </div>
     </div>
+</div>
+
+<!-- Contenedor Registro -->
+<div class="auth-container hidden fade" id="register-container" style="overflow-y: auto;">
+    <div class="form-container">
+        <div class="contenidoResponsive fade">
+            <p><em>Patrocinado por:</em></p>
+            <div class="imagenesLogos">
+                <img src="{% static 'pwa/img/utclogo.avif' %}" alt="Logo UTC">
+                <img class="tandacato" src="{% static 'pwa/img/tandacato.png' %}" alt="Logo TANDACATO">
+                <img src="{% static 'pwa/img/si.png' %}" alt="Logo SI">
+            </div>
+            <h1 class="tituloCentralx titleFade">AquAlert 💧 Sistema de Notificación</h1>
+            <br><br>
+        </div>
+        <h2 class="form-title">Registro de Usuario</h2>
+        
+        {% if messages %}
+            {% for message in messages %}
+                <div class="alert alert-{{ message.tags }}">{{ message }}</div>
+            {% endfor %}
+        {% endif %}
+
+        <form method="post" action="{% url 'registro' %}" enctype="multipart/form-data" id="formRegistroUsuario">
+            {% csrf_token %}
+            
+            <div class="form-group mb-3">
+                <label for="dni"><i class="fa-solid fa-id-card"></i> Número de cédula:</label>
+                <input type="text" name="dni" id="dni" class="form-control" required>
+            </div>
+
+            <div class="form-group mb-3">
+                <label for="nombreUsuario"><i class="fa-solid fa-user"></i> Nombre completo:</label>
+                <input type="text" name="nombreUsuario" id="nombreUsuario" class="form-control" required>
+            </div>
+
+            <div class="form-group mb-3">
+                <label for="correoUsuario"><i class="fa-solid fa-envelope"></i> Correo electrónico:</label>
+                <input type="email" name="correoUsuario" id="correoUsuario" class="form-control" required>
+            </div>
+
+            <div class="form-group mb-3">
+                <label for="passwordUsuario"><i class="fa-solid fa-lock"></i> Contraseña:</label>
+                <input type="password" name="passwordUsuario" id="passwordUsuario" class="form-control" minlength="6" required>
+                <div class="password-hint text-muted" style="font-size:12px;">Mínimo 6 caracteres</div>
+            </div>
+
+            <div class="form-group mb-3">
+                <label for="telefonoUsuario"><i class="fa-solid fa-phone"></i> Teléfono:</label>
+                <input type="text" name="telefonoUsuario" id="telefonoUsuario" class="form-control">
+            </div>
+
+            <div class="form-group mb-3">
+                <label for="direccionUsuario"><i class="fa-solid fa-location-dot"></i> Dirección:</label>
+                <input type="text" name="direccionUsuario" id="direccionUsuario" class="form-control">
+            </div>
+
+            <div class="form-group mb-3">
+                <label for="fotoPerfil"><i class="fa-solid fa-image"></i> Foto de perfil:</label>
+                <input type="file" name="fotoPerfil" id="fotoPerfil" class="form-control" accept="image/*">
+            </div>
+
+            <button type="submit" class="btn btn-primary w-100 mt-3">
+                <i class="fa-solid fa-user-plus"></i> Registrarse
+            </button>
+        </form>
+
+        <div class="toggle-form mt-4 text-center">
+            ¿Ya tienes cuenta? <a onclick="toggleForm('login')">Inicia sesión aquí</a>
+        </div>
+        
+    </div>
+</div>
+
+<!-- Contenedor Verificación -->
+<div class="auth-container hidden fade" id="verify-container">
+    <div class="form-container">
+        <h2 class="form-title">Verifica tu correo</h2>
+        <div class="alert alert-info">
+            Se ha enviado un código de verificación a tu correo electrónico.
+        </div>
+        <form method="post" action="{% url 'verify_email' %}">
+            {% csrf_token %}
+            <div class="form-group">
+                <label for="verification_code">Código de verificación</label>
+                <input type="text" id="verification_code" name="verification_code" required>
+            </div>
+            <button type="submit" class="btn">Verificar</button>
+        </form>
+    </div>
+</div>
+
+<script>
+    function toggleForm(formType) {
+        // Obtiene los contenedores principales
+        const loginContainer = document.getElementById('login-container');
+        const registerContainer = document.getElementById('register-container');
+        const verifyContainer = document.getElementById('verify-container');
+        
+        // Oculta todos los contenedores
+        loginContainer.classList.add('hidden');
+        registerContainer.classList.add('hidden');
+        verifyContainer.classList.add('hidden');
+        
+        // Muestra solo el contenedor solicitado
+        if (formType === 'register') {
+            registerContainer.classList.remove('hidden');
+        } else if (formType === 'verify') {
+            verifyContainer.classList.remove('hidden');
+        } else {
+            loginContainer.classList.remove('hidden');
+        }
+    }
+    
+    // Mostrar formulario de verificación si viene del backend
+    {% if show_verify %}
+    toggleForm('verify');
+    {% endif %}
+</script>
+
+
 
 
 {% if mostrar_modal %}
@@ -314,29 +384,6 @@
 
 
 
-
-    <script>
-        function toggleForm(formType) {
-            const loginForm = document.getElementById('login-form');
-            const registerForm = document.getElementById('register-form');
-            const verifyForm = document.getElementById('verify-form');
-            
-            loginForm.classList.add('hidden');
-            registerForm.classList.add('hidden');
-            verifyForm.classList.add('hidden');
-            
-            if (formType === 'register') {
-                registerForm.classList.remove('hidden');
-            } else if (formType === 'verify') {
-                verifyForm.classList.remove('hidden');
-            } else {
-                loginForm.classList.remove('hidden');
-            }
-        }
-    </script>
-
-
-
     {% if messages %}
     {% for message in messages %}
         <script>
@@ -355,9 +402,144 @@
 
 
 
+    
 
-</body>
-</html>
+<script>
+    // Validadores personalizados
+
+    // 1. Validación: no permitir espacios dobles
+    $.validator.addMethod("espaciosDobles", function(value) {
+        return !/\s{2,}/.test(value);
+    }, "No se permiten espacios dobles o múltiples espacios seguidos.");
+
+    // 2. Validación: exactamente 4 palabras en nombre completo
+    $.validator.addMethod("nombreCompletoFormato", function(value) {
+        return value.trim().split(/\s+/).length === 4;
+    }, "Ingresa 2 nombres y 2 apellidos (total 4 palabras separadas por espacios).");
+
+    // 3. Validación: número de cédula ecuatoriana (10 dígitos)
+    $.validator.addMethod("dniEcuador", function(value) {
+        return /^\d{10}$/.test(value);
+    }, "La cédula debe tener exactamente 10 dígitos numéricos.");
+
+    // 4. Validación: número telefónico ecuatoriano móvil (09XXXXXXXX)
+    $.validator.addMethod("telefonoEcuador", function(value) {
+        return /^09\d{8}$/.test(value);
+    }, "Ingresa un número de teléfono válido que empiece con 09.");
+
+    // Inicializar la validación
+    $(document).ready(function () {
+        $("#formRegistroUsuario").validate({
+            rules: {
+                nombreUsuario: {
+                    required: true,
+                    minlength: 3,
+                    maxlength: 100,
+                    espaciosDobles: true,
+                    nombreCompletoFormato: true
+                },
+                correoUsuario: {
+                    required: true,
+                    email: true
+                },
+                passwordUsuario: {
+                    required: true,
+                    minlength: 6
+                },
+                telefonoUsuario: {
+                    required: true,
+                    telefonoEcuador: true
+                },
+                direccionUsuario: {
+                    required: true,
+                    minlength: 5,
+                    maxlength: 255
+                },
+                fotoPerfil: {
+                    required: true,
+                    extension: "jpg|jpeg|png|gif"
+                },
+                dni: {
+                    required: true,
+                    dniEcuador: true
+                }
+            },
+            messages: {
+                nombreUsuario: {
+                    required: "Por favor, ingresa tu nombre completo.",
+                    minlength: "Debe tener al menos 3 caracteres.",
+                    maxlength: "No puede superar los 100 caracteres.",
+                    espaciosDobles: "Evita usar más de un espacio seguido.",
+                    nombreCompletoFormato: "Debe tener exactamente 4 palabras: 2 nombres y 2 apellidos."
+                },
+                correoUsuario: {
+                    required: "Ingresa tu correo electrónico.",
+                    email: "Formato de correo inválido (ejemplo@dominio.com)."
+                },
+                passwordUsuario: {
+                    required: "Ingresa una contraseña.",
+                    minlength: "La contraseña debe tener al menos 6 caracteres."
+                },
+                telefonoUsuario: {
+                    required: "Ingresa tu número de teléfono.",
+                    telefonoEcuador: "Formato inválido. Debe empezar con 09 y tener 10 dígitos."
+                },
+                direccionUsuario: {
+                    required: "Ingresa tu dirección.",
+                    minlength: "La dirección debe tener al menos 5 caracteres.",
+                    maxlength: "Máximo 255 caracteres permitidos."
+                },
+                fotoPerfil: {
+                    required: "Selecciona tu foto de perfil.",
+                    extension: "Solo se permiten archivos jpg, jpeg, png o gif."
+                },
+                dni: {
+                    required: "Ingresa tu número de cédula.",
+                    dniEcuador: "Formato inválido. Debe tener 10 dígitos numéricos."
+                }
+            },
+            errorElement: 'div',
+            errorPlacement: function (error, element) {
+                error.addClass('error'); 
+                if (element.prop('type') === 'file') {
+                    error.insertAfter(element.parent());
+                } else {
+                    error.insertAfter(element);
+                }
+            },
+            highlight: function (element) {
+                $(element).addClass('error');
+            },
+            unhighlight: function (element) {
+                $(element).removeClass('error');
+            }
+        });
+    });
+</script>
+
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        $("#fotoPerfil").fileinput({
+            theme: "fas",
+            showUpload: false,
+            showRemove: true,
+            allowedFileExtensions: ["jpg", "jpeg", "png", "gif"],
+            maxFileSize: 2048,
+            browseLabel: "Seleccionar imagen",
+            removeLabel: "Quitar",
+            msgPlaceholder: "Busca una imagen...",
+            msgSizeTooLarge: "La imagen excede el tamaño permitido de 2 MB.",
+            msgInvalidFileExtension: "Formato inválido. Solo se permiten JPG, JPEG, PNG y GIF.",
+            
+            dropZoneTitle: "📂 Arrastra y suelta tu imagen aquí o haz clic en 'Seleccionar imagen'."
+        });
+    });
+</script>
+
+
+
+
+
 {% endblock %}
 
 

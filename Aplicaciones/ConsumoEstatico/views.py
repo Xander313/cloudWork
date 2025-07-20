@@ -4,6 +4,9 @@ from Aplicaciones.UsuarioSensor.models import UsuarioSensor
 from django.contrib import messages
 
 def editar_consumo_estatico(request, id):
+    if not request.session.get('es_admin'):
+        messages.error(request, 'Ruta protegida, primero debe iniciar sesión.')
+        return redirect('login') 
     consumos = ConsumoEstatico.objects.filter(id=id)
     if not consumos.exists():
         messages.error(request, 'Consumo estático no encontrado.')
@@ -21,6 +24,9 @@ def editar_consumo_estatico(request, id):
     return render(request, 'admin/editar_consumo_estatico.html', {'consumo': consumo})
 
 def eliminar_consumo_estatico(request, id):
+    if not request.session.get('es_admin'):
+        messages.error(request, 'Ruta protegida, primero debe iniciar sesión.')
+        return redirect('login') 
     consumos = ConsumoEstatico.objects.filter(id=id)
     if not consumos.exists():
         messages.error(request, 'Consumo estático no encontrado.')
@@ -32,6 +38,9 @@ def eliminar_consumo_estatico(request, id):
 
 
 def agregar_consumo_estatico(request):
+    if not request.session.get('es_admin'):
+        messages.error(request, 'Ruta protegida, primero debe iniciar sesión.')
+        return redirect('login') 
     # Usuarios que ya tienen un consumo estático
     usados_ids = ConsumoEstatico.objects.values_list('usuarioSensor_id', flat=True)
     disponibles = UsuarioSensor.objects.exclude(id__in=usados_ids)

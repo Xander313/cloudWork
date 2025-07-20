@@ -19,8 +19,13 @@
                 <div class="card-body px-4 py-4">
                     <form method="post" action="{% url 'agregar_usuario' %}" enctype="multipart/form-data" id="formAgregarUsuario">
                         {% csrf_token %}
+                        <div class="mb-4">
+                            <label for="dni" class="form-label"><i class="fa-solid fa-id-card"></i> Número de cédula:</label>
+                            <input type="text" name="dni" id="dni" class="form-control" required>
+                        </div>
+
                         <div class="form-group">
-                            <label for="correo">Correo electrónico:</label>
+                            <label for="correo"><i class="fa-solid fa-envelope"></i> Correo electrónico:</label>
                             <input type="email" class="form-control" id="correo" name="correo" placeholder="ejemplo@gmail.com">
                         </div>
 
@@ -81,6 +86,7 @@
     // Cargar correos desde el servidor (usualmente pasado desde la vista Django)
     const correosExistentes = {{ correos|safe }};
     const telefonosExistentes = {{ telefonos|safe }};
+    const dniExistentes = {{ dni|safe }};
 
 
     // Método personalizado para validar si el correo ya existe
@@ -101,6 +107,10 @@
         return !telefonosExistentes.includes(value.trim());
     }, "⚠️ Este teléfono ya está registrado.");
 
+
+    $.validator.addMethod("dniDuplicado", function (value, element) {
+        return !dniExistentes.includes(value.trim());
+    }, "⚠️ Este número de cédula ya está registrado.");
 
 
     // Inicializar la validación del formulario
@@ -132,7 +142,13 @@
                 fotoPerfil: {
                     required: true,
                     extension: "jpg|jpeg|png|gif"
+                },
+                dni: {
+                    required: true,
+                    pattern: /^\d{10}$/,
+                    dniDuplicado: true
                 }
+
             },
             messages: {
                 correo: {
@@ -159,6 +175,11 @@
                 fotoPerfil: {
                     required: "Por favor, selecciona una foto de perfil.",
                     extension: "Solo se permiten archivos de imagen (jpg, jpeg, png, gif)."
+                },
+                dni: {
+                    required: "Por favor, ingresa el número de cédula.",
+                    pattern: "Por favor, la cédula debe tener exactamente 10 dígitos NUMÉRICOS.",
+                    dniDuplicado: "⚠️ Este número de cédula ya está registrado."
                 }
             },
             errorElement: 'div',

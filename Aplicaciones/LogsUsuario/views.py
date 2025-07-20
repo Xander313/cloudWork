@@ -9,6 +9,9 @@ from Aplicaciones.Usuario.models import Usuario
 
 
 def agregar_log_usuario(request):
+    if not request.session.get('es_admin'):
+        messages.error(request, 'Ruta protegida, primero debe iniciar sesión.')
+        return redirect('login') 
     if request.method == 'POST':
         try:
             # Obtener datos del formulario
@@ -44,6 +47,9 @@ def agregar_log_usuario(request):
     })
 
 def eliminar_log_usuario(request, id):
+    if not request.session.get('es_admin'):
+        messages.error(request, 'Ruta protegida, primero debe iniciar sesión.')
+        return redirect('login') 
     logs = LogUsuario.objects.filter(id=id)
     if not logs.exists():
         messages.error(request, 'Log de usuario no encontrado.')
@@ -54,6 +60,9 @@ def eliminar_log_usuario(request, id):
     return redirect('ver_logs_usuario')
 
 def editar_log_usuario(request, id):
+    if not request.session.get('es_admin'):
+        messages.error(request, 'Ruta protegida, primero debe iniciar sesión.')
+        return redirect('login') 
     log = get_object_or_404(LogUsuario, id=id)
 
     if request.method == 'POST':

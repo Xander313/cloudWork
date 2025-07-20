@@ -16,10 +16,10 @@ import json
 from django.utils import timezone
 
 
-
-
-
 def presentar_limite_usuario(request, id):
+    if not request.session.get('es_usuario'):
+        messages.error(request, 'Ruta protegida, primero debe iniciar sesión.')
+        return redirect('login') 
     usuario_id = request.session['usuario_id']
     usuario = get_object_or_404(Usuario, pk=id)
     sensores_asignados = UsuarioSensor.objects.filter(usuario=usuario)
@@ -195,6 +195,10 @@ def eliminar_usuario_sensor(request, id):
 
 
 def nuevoAsignacion(request):
+
+    if not request.session.get('es_admin'):
+        messages.error(request, 'Ruta protegida, primero debe iniciar sesión.')
+        return redirect('login') 
     usuarios = Usuario.objects.all().order_by('nombreUsuario')
     sensores_asignados = UsuarioSensor.objects.values_list('sensor_id', flat=True)
     sensores = Sensor.objects.exclude(sensorID__in=sensores_asignados).order_by('nombreSensor')
@@ -253,6 +257,11 @@ def nuevoAsignacion(request):
 
 
 def editar_asignacion(request, asignacion_id):
+
+    if not request.session.get('es_admin'):
+        messages.error(request, 'Ruta protegida, primero debe iniciar sesión.')
+        return redirect('login') 
+    
     asignacion = get_object_or_404(UsuarioSensor, id=asignacion_id)
 
     consumo_obj = ConsumoEstatico.objects.filter(usuarioSensor=asignacion).order_by('fechaCorte').first()
@@ -311,6 +320,9 @@ def editar_asignacion(request, asignacion_id):
 
 
 def eliminar_asignacion(request, asignacion_id):
+    if not request.session.get('es_admin'):
+        messages.error(request, 'Ruta protegida, primero debe iniciar sesión.')
+        return redirect('login') 
     if request.method == 'POST':
         asignacion = get_object_or_404(UsuarioSensor, id=asignacion_id)
 
@@ -333,6 +345,11 @@ from django.core.serializers.json import DjangoJSONEncoder
 import json
 
 def listaAsignacion(request):
+
+    if not request.session.get('es_admin'):
+        messages.error(request, 'Ruta protegida, primero debe iniciar sesión.')
+        return redirect('login') 
+    
     asignaciones = UsuarioSensor.objects.select_related('sensor', 'usuario').all()
 
     asignaciones_js = []

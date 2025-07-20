@@ -22,11 +22,14 @@
                         <label class="form-check-label" for="estado">Activa</label>
                     </div>
 
-                    <div class="d-grid">
+                    <center>
+                        <a href="{% url 'lista_notificaciones' %}" class="btn btn-secondary"> 
+                            <i class="fa-solid fa-arrow-left"></i> Volver al Listado 
+                        </a>
                         <button type="submit" class="btn btn-info text-white">
                             <i class="fa-solid fa-save"></i> Guardar Cambios
                         </button>
-                    </div>
+                    </center>
                 </form>
             </div>
         </div>
@@ -39,13 +42,13 @@
         rules: {
             mensaje: {
                 required: true,
-                minlength: 5
+                minlength: 50
             }
         },
         messages: {
             mensaje: {
                 required: "Por favor, ingrese un mensaje.",
-                minlength: "El mensaje debe tener al menos 5 caracteres."
+                minlength: "El mensaje debe tener al menos 50 caracteres."
             }
         }
     });

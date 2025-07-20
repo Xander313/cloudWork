@@ -7,12 +7,19 @@
     <link rel="manifest" href="{% static 'pwa/manifest.json' %}?v=8">
 
     <meta name="theme-color" content="#02fcfc">
+    <link rel="shortcut icon" href="{% static 'pwa/img/logo.avif' %}" type="image/x-icon">
+
 
 
     {% block linksCss %}{% endblock %}
     <link href="https://fonts.googleapis.com/css2?family=Montserrat&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css" integrity="sha512-Evv84Mr4kqVGRNSgIGL/F/aIDqQb7xQ2vcrdIwxfjThSH8CSR7PBEakCr51Ck+w+/U6swU2Im1vVX0SVk9ABhg==" crossorigin="anonymous" referrerpolicy="no-referrer" />
-    <link rel="shortcut icon" href="{% static 'pwa/img/logo.png' %}" type="image/x-icon">
+
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100..900;1,100..900&display=swap" rel="stylesheet">
+
 
 
     <!-- Importando jquery validation -->
@@ -49,8 +56,17 @@
 </head>
 <body>
 
+    <style>
+        html, body, h1, h2, h3 {
+            font-family: 'Montserrat', sans-serif;
+        }
+
+    </style>
+
+
     <header>
         <h1 class="tituloCentral titleFade">AquAlert 💧 {% block seccion %}{% endblock %}</h1>
+        <hr>
             <div class="theme-switch-wrapper">
                 <label class="switch theme-switch">
                     <input type="checkbox" class="bsc" checked>

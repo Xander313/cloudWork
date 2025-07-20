@@ -28,7 +28,7 @@
                         <input type="number" step="0.01" name="maxConsumo" class="form-control" required>
                     </div>
                     <div class="mb-3">
-                        <label for="minConsumo" class="form-label">Consumo Mínimo (L):</label>
+                        <label for="minConsumo" class="form-label">Consumo Promédio (L):</label>
                         <input type="number" step="0.01" name="minConsumo" class="form-control" required>
                     </div>
                     <div class="mb-3">
@@ -59,46 +59,71 @@
 </div>
 
 <script>
-    $("#form-agregar-historico").validate({
-        rules: {
-            consumoTotal: { required: true, number: true, min: 0.01 },
-            maxConsumo: { required: true, number: true, min: 0.01 },
-            minConsumo: { required: true, number: true, min: 0.01 },
-            fechaPeriodo: { required: true },
-            usuarioSensor: { required: true }
-        },
-        messages: {
-            consumoTotal: {
-                required: "Ingrese el consumo total.",
-                number: "Debe ser un número válido.",
-                min: "El consumo debe ser mayor a 0."
+    // Método personalizado para validar rango de fechas
+    $.validator.addMethod("fechaRango", function(value, element) {
+        if (!value) return false;
+
+        const fechaIngresada = new Date(value);
+        const hoy = new Date();
+        const seisMesesAtras = new Date();
+        seisMesesAtras.setMonth(hoy.getMonth() - 6);
+
+        // Normalizar (eliminar hora)
+        fechaIngresada.setHours(0, 0, 0, 0);
+        hoy.setHours(0, 0, 0, 0);
+        seisMesesAtras.setHours(0, 0, 0, 0);
+
+        return fechaIngresada <= hoy && fechaIngresada >= seisMesesAtras;
+    }, "La fecha debe estar entre hoy y hasta 6 meses atrás.");
+
+    // Inicializar validación del formulario
+    $(document).ready(function () {
+        $("#form-agregar-historico").validate({
+            rules: {
+                consumoTotal: { required: true, number: true, min: 0.01, max: 5000 },
+                maxConsumo: { required: true, number: true, min: 0.01, max: 100 },
+                minConsumo: { required: true, number: true, min: 0.01, max: 200 },
+                fechaPeriodo: { required: true, fechaRango: true },
+                usuarioSensor: { required: true }
             },
-            maxConsumo: {
-                required: "Ingrese el consumo máximo.",
-                number: "Debe ser un número válido.",
-                min: "Debe ser mayor a 0."
+            messages: {
+                consumoTotal: {
+                    required: "Ingrese el consumo total.",
+                    number: "Debe ser un número válido.",
+                    min: "Debe ser mayor a 0.",
+                    max: "No puede superar los 5000 litros."
+                },
+                maxConsumo: {
+                    required: "Ingrese el consumo máximo.",
+                    number: "Debe ser un número válido.",
+                    min: "Debe ser mayor a 0.",
+                    max: "No puede superar los 100 litros."
+                },
+                minConsumo: {
+                    required: "Ingrese el consumo mínimo.",
+                    number: "Debe ser un número válido.",
+                    min: "Debe ser mayor a 0.",
+                    max: "No puede superar los 200 litros."
+                },
+                fechaPeriodo: {
+                    required: "Seleccione la fecha del periodo.",
+                    fechaRango: "La fecha debe estar entre hoy y hasta 6 meses atrás."
+                },
+                usuarioSensor: {
+                    required: "Seleccione un usuario y medidor."
+                }
             },
-            minConsumo: {
-                required: "Ingrese el consumo mínimo.",
-                number: "Debe ser un número válido.",
-                min: "Debe ser mayor a 0."
+            errorElement: "div",
+            errorClass: "invalid-feedback",
+            highlight: function(element) {
+                $(element).addClass('is-invalid');
             },
-            fechaPeriodo: {
-                required: "Seleccione la fecha del periodo."
-            },
-            usuarioSensor: {
-                required: "Seleccione un usuario y medidor."
+            unhighlight: function(element) {
+                $(element).removeClass('is-invalid');
             }
-        },
-        errorElement: "div",
-        errorClass: "invalid-feedback",
-        highlight: function(element) {
-            $(element).addClass('is-invalid');
-        },
-        unhighlight: function(element) {
-            $(element).removeClass('is-invalid');
-        }
+        });
     });
 </script>
+
 
 {% endblock %}

@@ -21,6 +21,7 @@ from Aplicaciones.LimiteUsuario.models import LimiteUsuario
 
 
 def agregar_notificacion(request):
+    
     if request.method == 'POST':
         try:
             mensaje = request.POST.get('mensaje')
@@ -54,6 +55,11 @@ def agregar_notificacion(request):
 
 
 def ver_notificaciones_por_usuario(request, id):
+
+    if not request.session.get('es_usuario'):
+        messages.error(request, 'Ruta protegida, primero debe iniciar sesión.')
+        return redirect('login') 
+
     usuario_id = request.session['usuario_id']
     usuario = get_object_or_404(Usuario, pk=id)
     sensores = UsuarioSensor.objects.filter(usuario=usuario)
@@ -98,6 +104,8 @@ def ver_notificaciones_por_usuario(request, id):
 
 
 def eliminar_notificacion(request, id):
+
+    
     notificaciones = Notificacion.objects.filter(id=id)
     if not notificaciones.exists():
         messages.error(request, 'Notificación no encontrada.')
@@ -109,6 +117,7 @@ def eliminar_notificacion(request, id):
 
 
 def editar_notificacion(request, id):
+
     notificacion = get_object_or_404(Notificacion, id=id)
     if request.method == 'POST':
         notificacion.mensaje = request.POST.get('mensaje')
@@ -204,6 +213,10 @@ def obtener_notificaciones_sensor(request, sensor_id):
 
 
 def estadisticaPresenracion(request, id):
+
+    if not request.session.get('es_usuario'):
+        messages.error(request, 'Ruta protegida, primero debe iniciar sesión.')
+        return redirect('login') 
     
     usuario = get_object_or_404(Usuario, pk=id)
     sensores_asignados = UsuarioSensor.objects.filter(usuario=usuario)
@@ -225,6 +238,8 @@ def estadisticaPresenracion(request, id):
 
 
 def reporte_consumo_json(request, sensor_id):
+
+    
     historico = ConsumoHistorico.objects.filter(usuarioSensor_id=sensor_id).order_by('fechaPeriodo')
 
     datos = {
@@ -238,6 +253,8 @@ def reporte_consumo_json(request, sensor_id):
 
 
 def reporte_consumo_pie(request, sensor_id):
+
+    
     historico = (
         ConsumoHistorico.objects
         .filter(usuarioSensor_id=sensor_id)
@@ -296,26 +313,20 @@ def estadisticas_geograficas(request):
 
 
 
-
-
-
-
-
-
-
-
-
 def admin_estadisticas_geograficas(request):
+    if not request.session.get('es_admin'):
+        messages.error(request, 'Ruta protegida, primero debe iniciar sesión.')
+        return redirect('login') 
     return render(request, 'Notificaciones/panelEstadisticas.html', {
 
     })
 
 
 
-
-
-
 def admin_estadisticas_geograficas_avanzadas(request):
+    if not request.session.get('es_admin'):
+        messages.error(request, 'Ruta protegida, primero debe iniciar sesión.')
+        return redirect('login') 
     return render(request, 'Notificaciones/panelEstadisticasAvanzadas.html', {
 
     })
@@ -334,6 +345,8 @@ def admin_estadisticas_geograficas_avanzadas(request):
 
 def consumo_dinamico_hoy(request):
     # Hora local en UTC-5   
+
+
 
     hora_ecuador = now() - timedelta(hours=5)
     fecha_ec_local = hora_ecuador.date()

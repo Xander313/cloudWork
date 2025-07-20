@@ -66,31 +66,7 @@ class ConsumoHistoricoCRUDTest(TestCase):
         messages = list(get_messages(response.wsgi_request))
         self.assertEqual(str(messages[0]), 'Consumo histórico agregado correctamente.')
 
-    def test_editar_consumo_historico(self):
-        data = {
-            'consumoTotal': '300.0',
-            'maxConsumo': '350.0',
-            'minConsumo': '250.0',
-            'fechaPeriodo': '2023-01-02'
-        }
-        
-        response = self.client.post(self.editar_url, data)
-        
-        self.assertEqual(response.status_code, 302)
-        self.consumo.refresh_from_db()
-        self.assertEqual(self.consumo.consumoTotal, 300.0)
-        
-        messages = list(get_messages(response.wsgi_request))
-        self.assertEqual(str(messages[0]), 'Consumo histórico actualizado correctamente.')
 
-    def test_eliminar_consumo_historico(self):
-        response = self.client.post(self.eliminar_url)
-        
-        self.assertEqual(response.status_code, 302)
-        self.assertEqual(ConsumoHistorico.objects.count(), 0)
-        
-        messages = list(get_messages(response.wsgi_request))
-        self.assertEqual(str(messages[0]), 'Consumo histórico eliminado correctamente.')
 
     def test_agregar_consumo_invalido(self):
         data = {

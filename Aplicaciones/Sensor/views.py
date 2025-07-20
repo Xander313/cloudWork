@@ -46,6 +46,7 @@ def agregar_sensor(request):
     if not request.session.get('es_admin'):
         messages.error(request, 'Ruta protegida, primero debe iniciar sesión.')
         return redirect('login') 
+    
     sensores_existentes = Sensor.objects.values_list('sensorID', flat=True)
 
     if request.method == 'POST':

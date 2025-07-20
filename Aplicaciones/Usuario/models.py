@@ -9,6 +9,8 @@ class Usuario(models.Model):
     direccionUsuario = models.CharField(max_length=255, default="")
     fotoPerfil = models.FileField(upload_to='fotos_perfil/', blank=True, null=True)
     fechaCreacion = models.DateTimeField(auto_now_add=True)
+    dni = models.CharField(max_length=20, unique=True, null=True, blank=True)
+
 
     def __str__(self):
         return self.nombreUsuario
