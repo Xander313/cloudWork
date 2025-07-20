@@ -53,3 +53,9 @@ def ver_logs_usuario(request):
     return render(request, 'admin/log_usuario.html', {
         'logs': logs
     })
+
+def lista_consumo_historico(request):
+    consumos_historicos = ConsumoHistorico.objects.all()
+    return render(request, 'admin/consumo_historico.html', {
+        'consumos_historicos': consumos_historicos
+    })
