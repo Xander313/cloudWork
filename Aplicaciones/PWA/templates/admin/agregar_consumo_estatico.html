@@ -5,10 +5,10 @@
     <div class="w-100" style="max-width: 400px;">
         <div class="card shadow-sm">
             <div class="card-header bg-success text-white text-center">
-                <h2 class="mb-0 py-2"><i class="fa-solid fa-pen-to-square"></i> Editar Consumo Estático</h2>
+                <h2 class="mb-0 py-2"><i class="fa-solid fa-pen-to-square"></i> Agregar Consumo Estático</h2>
             </div>
             <div class="card-body px-4 py-4">
-                <form method="post">
+                <form method="post" id="agregar-consumo-estatico">
                     {% csrf_token %}
 
                     <div class="mb-3">
@@ -40,4 +40,30 @@
         </div>
     </div>
 </div>
+
+
+<script>
+    $("#agregar-consumo-estatico").validate({
+        rules: {
+            consumoEstatico: {
+                required: true,
+                number: true,
+                min: 0.01
+            },
+            usuarioSensor: {
+                required: true
+            }
+        },
+        messages: {
+            consumoEstatico: {
+                required: "Por favor, ingrese el consumo estático.",
+                number: "El consumo debe ser un número válido.",
+                min: "El consumo debe ser mayor a 0"
+            },
+            usuarioSensor: {
+                required: "Debe seleccionar un usuario y sensor."
+            }
+        }
+    });
+</script>
 {% endblock %}

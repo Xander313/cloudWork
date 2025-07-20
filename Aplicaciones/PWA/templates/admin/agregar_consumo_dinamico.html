@@ -57,7 +57,8 @@
             consumoDinamico: {
                 required: true,
                 number: true,
-                min: 0.01
+                min: 0.01,
+                max: 50.00
             },
             usuarioSensor: {
                 required: true
@@ -67,7 +68,8 @@
             consumoDinamico: {
                 required: "Por favor ingrese el consumo",
                 number: "Debe ser un número válido",
-                min: "El consumo debe ser mayor a 0"
+                min: "El consumo debe ser mayor a 0",
+                max: "El consumo no puede exceder 50 litros"
             },
             usuarioSensor: {
                 required: "Debe seleccionar un usuario y medidor"

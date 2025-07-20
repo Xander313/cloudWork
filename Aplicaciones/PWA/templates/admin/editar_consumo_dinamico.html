@@ -34,7 +34,8 @@
             consumoDinamico: {
                 required: true,
                 number: true,
-                min: 0
+                min: 0,
+                max: 50.00
             }
         },
 
@@ -42,7 +43,8 @@
             consumoDinamico: {
                 required: "Por favor, ingrese el consumo dinámico.",
                 number: "El consumo debe ser un número válido.",
-                min: "El consumo no puede ser negativo."
+                min: "El consumo no puede ser negativo.",
+                max: "El consumo no puede exceder 50 litros"
             }
         }
     });

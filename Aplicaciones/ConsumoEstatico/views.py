@@ -32,12 +32,37 @@ def eliminar_consumo_estatico(request, id):
 
 
 def agregar_consumo_estatico(request):
+    # Usuarios que ya tienen un consumo estático
     usados_ids = ConsumoEstatico.objects.values_list('usuarioSensor_id', flat=True)
-
     disponibles = UsuarioSensor.objects.exclude(id__in=usados_ids)
+
+    if request.method == 'POST':
+        try:
+            consumo = float(request.POST.get('consumoEstatico'))
+            usuario_sensor_id = request.POST.get('usuarioSensor')
+
+            if not usuario_sensor_id:
+                messages.error(request, 'Debe seleccionar un usuario.')
+                raise ValueError()
+
+            usuario_sensor = UsuarioSensor.objects.get(id=usuario_sensor_id)
+
+            ConsumoEstatico.objects.create(
+                consumoEstatico=consumo,
+                usuarioSensor=usuario_sensor
+            )
+
+            messages.success(request, 'Consumo estático agregado correctamente.')
+            return redirect('lista_consumo_estatico')
+
+        except UsuarioSensor.DoesNotExist:
+            messages.error(request, 'El usuario seleccionado no existe.')
+        except ValueError:
+            messages.error(request, 'Debe ingresar un valor numérico válido.')
+        except Exception as e:
+            messages.error(request, f'Error al guardar: {str(e)}')
 
     return render(request, 'admin/agregar_consumo_estatico.html', {
         'usuariosSensoresDisponibles': disponibles
     })
-
 
