@@ -38,7 +38,13 @@ def editar_tipo_mensaje(request, id):
 
 # Eliminar TipoMensaje
 def eliminar_tipo_mensaje(request, id):
-    tipo_mensaje = get_object_or_404(TipoMensaje, id=id)
-    tipo_mensaje.delete()
-    messages.success(request, 'Tipo de mensaje eliminado correctamente.')
+    try:
+        tipo_mensaje = TipoMensaje.objects.filter(id=id).first()
+        if tipo_mensaje:
+            tipo_mensaje.delete()
+            messages.success(request, 'Tipo de mensaje eliminado correctamente.')
+        else:
+            messages.error(request, 'El tipo de mensaje no existe.')
+    except Exception as e:
+        messages.error(request, f'Error al eliminar: {str(e)}')
     return redirect('lista_tipo_mensaje')
